@@ -1,0 +1,2 @@
+read -sysv rast.sv -top rast_wrapper
+write -format verilog rast.v

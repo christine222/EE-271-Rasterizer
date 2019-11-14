@@ -1,0 +1,13 @@
+[GENERAL]
+model_files: rast.sv[rast_wrapper],rst_beh.ets
+add_clock: True
+abstract_clock: True
+vcd: True
+verific: True
+synchronize: True
+
+[DEFAULT]
+bmc_length: 5
+precondition: reset_performed
+prove: True
+verification: safety
