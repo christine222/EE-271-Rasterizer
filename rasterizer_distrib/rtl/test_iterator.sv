@@ -341,9 +341,9 @@ if(MOD_FSM == 0) begin // Using baseline FSM
                 //$display("beginning of teststate");
                 next_tri_R14S = tri_R14S;
                 next_box_R14S = box_R14S;
+                next_color_R14U = color_R14U;
                 if (!at_end_box_R14H && !at_right_edg_R14H) begin
                     //$display("in first if");
-                    next_color_R14U = color_R13U;
                     next_sample_R14S = next_rt_samp_R14S;     
                     next_validSamp_R14H = 1'b1;
                     next_halt_RnnnnL = 1'b0;
@@ -353,7 +353,7 @@ if(MOD_FSM == 0) begin // Using baseline FSM
                 else if (!at_end_box_R14H && at_right_edg_R14H) begin
                     //$display("not at end and at right edge");
                     //next_tri_R14S = tri_R13S;
-                    next_color_R14U = color_R13U;
+                    //next_color_R14U = color_R13U;
                     next_sample_R14S = next_up_samp_R14S;     
                     next_validSamp_R14H = 1'b1;
                     next_halt_RnnnnL = 1'b0;
@@ -363,7 +363,7 @@ if(MOD_FSM == 0) begin // Using baseline FSM
                 end
                 else begin
                     //next_tri_R14S = tri_R13S;
-                    next_color_R14U = color_R13U;
+                    //next_color_R14U = color_R13U;
                     next_sample_R14S = box_R14S[0];     
                     next_validSamp_R14H = 1'b0;
                     next_halt_RnnnnL = 1'b1;
@@ -407,8 +407,8 @@ if(MOD_FSM == 0) begin // Using baseline FSM
     //Check that Proposed Sample is in BBox
     // START CODE HERE
     
-    assert property( rb_lt( rst, next_sample_R14S[0], box_R14S[1][0], validTri_R13H ));
-    assert property( rb_lt( rst, next_sample_R14S[1], box_R14S[1][1], validTri_R13H ));
+    assert property( rb_lt( rst, next_sample_R14S[0], next_box_R14S[1][0], validTri_R13H ));
+    assert property( rb_lt( rst, next_sample_R14S[1], next_box_R14S[1][1], validTri_R13H ));
     
     //always_comb begin
     //    $display("box[0][0] = %h", box_R13S[0][0]);
@@ -418,8 +418,8 @@ if(MOD_FSM == 0) begin // Using baseline FSM
     //    $display("sample[0] = %h", sample_R14S[0]);
     //    $display("sample[1] = %h", sample_R14S[1]);
     //end
-    assert property( rb_lt( rst, box_R14S[0][0], next_sample_R14S[0], validTri_R13H ));
-    assert property( rb_lt( rst, box_R14S[0][1], next_sample_R14S[1], validTri_R13H ));
+    assert property( rb_lt( rst, next_box_R14S[0][0], next_sample_R14S[0], validTri_R13H ));
+    assert property( rb_lt( rst, next_box_R14S[0][1], next_sample_R14S[1], validTri_R13H ));
     // END CODE HERE
     //Check that Proposed Sample is in BBox
 
