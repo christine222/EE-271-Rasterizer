@@ -171,6 +171,41 @@ module bbox
     // and assigning box_R10S to be the proper coordinates
 
     // START CODE HERE
+    
+    logic signed [SIGFIG-1:0]     max_1[1:0];
+    logic signed [SIGFIG-1:0]     max_2[1:0];
+    logic signed [SIGFIG-1:0]     min_1[1:0];
+    logic signed [SIGFIG-1:0]     min_2[1:0];
+
+    logic [1:0][5:0]        cmp_R10H ;             // Comparison Results
+    logic [1:0][1:0][2:0]   bbox_sel_R10H ;        // Decoded Select for Unclamped Bbox
+    logic [1:0][1:0]        clamp_R10H;                  // signal require clamping
+    logic [1:0][1:0]        invalidate_R10H;             // tri out of bounds
+
+    // Find Maximum and Minimum X and Y coordinate
+    // Then assign min and max to box coordinates
+    always_comb begin
+        let max(a, b) = (a > b) ? a : b;
+        let min(a, b) = (a < b) ? a : b;
+        max_1[0] = max(tri_R10S[0][0], tri_R10S[1][0]);
+        max_2[0] = max(max_1[0], tri_R10S[2][0]);
+
+        max_1[1] = max(tri_R10S[0][1], tri_R10S[1][1]);
+        max_2[1] = max(max_1[1], tri_R10S[2][1]);
+
+        
+        min_1[0] = min(tri_R10S[0][0], tri_R10S[1][0]);
+        min_2[0] = min(min_1[0], tri_R10S[2][0]);
+
+        min_1[1] = min(tri_R10S[0][1], tri_R10S[1][1]);
+        min_2[1] = min(min_1[1], tri_R10S[2][1]);
+
+        box_R10S[0][0] = min_2[0];
+        box_R10S[0][1] = min_2[1];
+        box_R10S[1][0] = max_2[0];
+        box_R10S[1][1] = max_2[1];
+    end
+
     //  DECLARE OTHER SIGNALS YOU NEED
     // Try declaring an always_comb block to assign values to box_R10S
     // END CODE HERE
@@ -181,12 +216,20 @@ module bbox
     // 2) Upper right coordinate is never less than lower left
 
     // START CODE HERE
+    //always_comb begin
+        //if (box_R10S[0][0] >= box_R10S[1][0] || box_R10S[0][1] >= box_R10S[1][1]) outvalid_R10H = 0;
+        //else outvalid_R10H = 1;
+    //end
     // END CODE HERE
+
     //Assertions to check if all cases are covered and assignments are unique
-    assert property(@(posedge clk) $onehot(bbox_sel_R10H[0][0]));
-    assert property(@(posedge clk) $onehot(bbox_sel_R10H[0][1]));
-    assert property(@(posedge clk) $onehot(bbox_sel_R10H[1][0]));
-    assert property(@(posedge clk) $onehot(bbox_sel_R10H[1][1]));
+    //assert property(@(posedge clk) $onehot(bbox_sel_R10H[0][0]));
+    //assert property(@(posedge clk) $onehot(bbox_sel_R10H[0][1]));
+    //assert property(@(posedge clk) $onehot(bbox_sel_R10H[1][0]));
+    //assert property(@(posedge clk) $onehot(bbox_sel_R10H[1][1]));
+
+    // Assertion to check if box is valid
+    assert property(@(posedge clk) $onehot(box_R10S[0][0] < box_R10S[1][0] && box_R10S[0][1] < box_R10S[1][1]));
     // Assertions end
 
     // ***************** End of Step 1 *********************
@@ -210,11 +253,14 @@ module bbox
     //       to a mask would allow you to do this operation
     //       as a bitwise and operation.
 
+
+
 //Round LowerLeft and UpperRight for X and Y
 generate
+logic signed [RADIX-1:0]     mask;
 for(genvar i = 0; i < 2; i = i + 1) begin
     for(genvar j = 0; j < 2; j = j + 1) begin
-
+        
         always_comb begin
             //Integer Portion of LL and UR Remains the Same
             rounded_box_R10S[i][j][SIGFIG-1:RADIX]
@@ -222,6 +268,24 @@ for(genvar i = 0; i < 2; i = i + 1) begin
 
             //////// ASSIGN FRACTIONAL PORTION
             // START CODE HERE
+            unique case (subSample_RnnnnU)
+                4'b1000 : begin
+                    rounded_box_R10S[i][j][RADIX-1:0] = box_R10S[i][j][RADIX-1:0] & 1'b0;
+                end
+                4'b0100 : begin
+                    rounded_box_R10S[i][j][RADIX-1] = box_R10S[i][j][RADIX-1] & 1'b1;
+                    rounded_box_R10S[i][j][RADIX-2:0] = box_R10S[i][j][RADIX-2:0] & 1'b0;
+                    //$display("after rounding %h", rounded_box_R10S[i][j]);
+                end
+                4'b0010 : begin
+                    rounded_box_R10S[i][j][RADIX-1:RADIX-2] = box_R10S[i][j][RADIX-1:RADIX-2] & 2'b11;
+                    rounded_box_R10S[i][j][RADIX-3:0] = box_R10S[i][j][RADIX-3:0] & 1'b0;
+                end
+                4'b0001 : begin
+                    rounded_box_R10S[i][j][RADIX-1:RADIX-3] = box_R10S[i][j][RADIX-1:RADIX-3] & 3'b111;
+                    rounded_box_R10S[i][j][RADIX-4:0] = box_R10S[i][j][RADIX-4:0] & 1'b0;
+                end
+            endcase
             // END CODE HERE
 
         end // always_comb
@@ -231,6 +295,7 @@ end
 endgenerate
 
     //Assertion to help you debug errors in rounding
+    
     assert property( @(posedge clk) (box_R10S[0][0] - rounded_box_R10S[0][0]) <= {subSample_RnnnnU,7'b0});
     assert property( @(posedge clk) (box_R10S[0][1] - rounded_box_R10S[0][1]) <= {subSample_RnnnnU,7'b0});
     assert property( @(posedge clk) (box_R10S[1][0] - rounded_box_R10S[1][0]) <= {subSample_RnnnnU,7'b0});
@@ -251,6 +316,46 @@ endgenerate
 
         //////// ASSIGN "out_box_R10S" and "outvalid_R10H"
         // START CODE HERE
+        if (rounded_box_R10S[0][0] < 0) begin
+            out_box_R10S[0][0] = 0;
+        end
+        else begin
+            out_box_R10S[0][0] = rounded_box_R10S[0][0];
+        end
+        if (rounded_box_R10S[0][1] < 0) begin
+            out_box_R10S[0][1] = 0;
+        end
+        else begin
+            out_box_R10S[0][1] = rounded_box_R10S[0][1];
+        end
+        if (rounded_box_R10S[1][0] > screen_RnnnnS[0]) begin
+            out_box_R10S[1][0] = screen_RnnnnS[0];
+        end
+        else begin
+            out_box_R10S[1][0] = rounded_box_R10S[1][0];
+        end
+        if (rounded_box_R10S[1][1] > screen_RnnnnS[1]) begin
+            out_box_R10S[1][1] = screen_RnnnnS[0];
+        end
+        else begin
+            out_box_R10S[1][1] = rounded_box_R10S[1][1];
+        end
+        //$display("3 bnc");
+        //$display("tri_R10S[0] %b", tri_R10S[0][0]);
+
+        // Check if bbox is valid
+        //$display("validTri_R10H %b", validTri_R10H);
+        //$display("out_box_R10S[0][0] %h", out_box_R10S[0][0]);
+        //$display("out_box_R10S[0][1] %h", out_box_R10S[0][1]);
+        //$display("out_box_R10S[1][0] %h", out_box_R10S[1][0]);
+        //$display("out_box_R10S[1][1] %h", out_box_R10S[1][1]);
+        if (validTri_R10H && (out_box_R10S[0][0] < out_box_R10S[1][0] && out_box_R10S[0][1] < out_box_R10S[1][1])) 
+            outvalid_R10H = 1'b1;
+        else 
+            outvalid_R10H = 1'b0;
+        //$display("4 bnc");
+        //$display("tri_R10S[0] %b", tri_R10S[0][0]);
+        //$display("halt %b", halt_RnnnnL);
         // END CODE HERE
 
     end
