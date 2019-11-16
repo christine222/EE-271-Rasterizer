@@ -73,9 +73,9 @@ int check_bounding_box(
     }
 
     // printf("done\n");
-    // return isCorrect;
+    return isCorrect;
     // return true;
-    return 1;
+    //return 1;
 }
 
 int check_sample_test(

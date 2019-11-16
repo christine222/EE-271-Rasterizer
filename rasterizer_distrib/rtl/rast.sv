@@ -73,59 +73,59 @@ module rast
 
     initial begin
         bbox_file = $fopen("ComputeBoundingBox_vector.json", "w");
-        $fdisplay(bbox_file, "[");
+        //$fdisplay(bbox_file, "[");
 
         sample_file = $fopen("SampleTest_vector.json", "w");
-        $fdisplay(sample_file, "[");
+        //$fdisplay(sample_file, "[");
 
         hash_file = $fopen("HashJTree_vector.json", "w");
-        $fdisplay(hash_file, "[");
+        //$fdisplay(hash_file, "[");
 
         iterator_file = $fopen("Iterator_vector.json", "w");
-        $fdisplay(iterator_file, "[");
+        //$fdisplay(iterator_file, "[");
 
         rast_file = $fopen("Rasterizer_vector.json", "w");
-        $fdisplay(rast_file, "[");
+        //$fdisplay(rast_file, "[");
     end
 
     always @(posedge clk) begin
-        $fdisplay(rast_file, "{\"RESET\": \"%b\",", rst);
+        //$fdisplay(rast_file, "{\"RESET\": \"%b\",", rst);
 
-        $fdisplay(rast_file, "\"valid_in\": \"%b\",", validTri_R10H);
+        //$fdisplay(rast_file, "\"valid_in\": \"%b\",", validTri_R10H);
 
-        $fdisplay(rast_file, "\"tri\": [[\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"]]",
-        tri_R10S[0][0],
-        tri_R10S[0][1],
-        tri_R10S[0][2],
-        tri_R10S[1][0],
-        tri_R10S[1][1],
-        tri_R10S[1][2],
-        tri_R10S[2][0],
-        tri_R10S[2][1],
-        tri_R10S[2][2], 
-        ",");
+        //$fdisplay(rast_file, "\"tri\": [[\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"]]",
+        //tri_R10S[0][0],
+        //tri_R10S[0][1],
+        //tri_R10S[0][2],
+        //tri_R10S[1][0],
+        //tri_R10S[1][1],
+        //tri_R10S[1][2],
+        //tri_R10S[2][0],
+        //tri_R10S[2][1],
+        //tri_R10S[2][2], 
+        //",");
 
-        $fdisplay(rast_file, "\"color_in\": [\"%b\", \"%b\", \"%b\"]",
-        color_R10U[0],
-        color_R10U[1],
-        color_R10U[2], 
-        ",");
+        //$fdisplay(rast_file, "\"color_in\": [\"%b\", \"%b\", \"%b\"]",
+        //color_R10U[0],
+        //color_R10U[1],
+        //color_R10U[2], 
+        //",");
 
-        $fdisplay(rast_file, "\"screen_max\": [\"%b\", \"%b\"],", screen_RnnnnS[0], screen_RnnnnS[1]);
-        $fdisplay(rast_file, "\"sample_size\": \"%b\",", subSample_RnnnnU);
-        $fdisplay(rast_file, "\"halt\": \"%b\",", halt_RnnnnL);
-        $fdisplay(rast_file, "\"valid_hit\": \"%b\",", hit_valid_R18H);
+        //$fdisplay(rast_file, "\"screen_max\": [\"%b\", \"%b\"],", screen_RnnnnS[0], screen_RnnnnS[1]);
+        //$fdisplay(rast_file, "\"sample_size\": \"%b\",", subSample_RnnnnU);
+        //$fdisplay(rast_file, "\"halt\": \"%b\",", halt_RnnnnL);
+        //$fdisplay(rast_file, "\"valid_hit\": \"%b\",", hit_valid_R18H);
 
-        $fdisplay(rast_file, "\"hit\": [\"%b\", \"%b\", \"%b\"]",
-        hit_R18S[0],
-        hit_R18S[1],
-        hit_R18S[2],
-        ",");
+        //$fdisplay(rast_file, "\"hit\": [\"%b\", \"%b\", \"%b\"]",
+        //hit_R18S[0],
+        //hit_R18S[1],
+        //hit_R18S[2],
+        //",");
 
-        $fdisplay(rast_file, "\"color_out\": [\"%b\", \"%b\", \"%b\"]},",
-        color_R18U[0],
-        color_R18U[1],
-        color_R18U[2]);
+        //$fdisplay(rast_file, "\"color_out\": [\"%b\", \"%b\", \"%b\"]},",
+        //color_R18U[0],
+        //color_R18U[1],
+        //color_R18U[2]);
      //   ",");
 
        // $fdisplay(rast_file, "},");
@@ -195,63 +195,63 @@ module rast
     // 'is_quad_out': Bits(1)}
 
     always @(posedge clk) begin
-        $fdisplay(bbox_file, "{\"RESET\": \"%b\",", rst);
+        //$fdisplay(bbox_file, "{\"RESET\": \"%b\",", rst);
 
-        $fdisplay(bbox_file, "\"valid_in\": \"%b\",", validTri_R10H);
+        //$fdisplay(bbox_file, "\"valid_in\": \"%b\",", validTri_R10H);
 
-        $fdisplay(bbox_file, "\"tri_in\": [[\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"]]",
-        tri_R10S[0][0],
-        tri_R10S[0][1],
-        tri_R10S[0][2],
-        tri_R10S[1][0],
-        tri_R10S[1][1],
-        tri_R10S[1][2],
-        tri_R10S[2][0],
-        tri_R10S[2][1],
-        tri_R10S[2][2], 
-        ",");
-
-        $fdisplay(bbox_file, "\"color_in\": [\"%b\", \"%b\", \"%b\"]",
-        color_R10U[0],
-        color_R10U[1],
-        color_R10U[2], 
-        ",");
-
-        $fdisplay(bbox_file, "\"screen_max\": [\"%b\", \"%b\"],", screen_RnnnnS[0], screen_RnnnnS[1]);
-
-        $fdisplay(bbox_file, "\"sample_size\": \"%b\",", subSample_RnnnnU);
-
-        $fdisplay(bbox_file, "\"halt\": \"%b\",", halt_RnnnnL);
-
-        $fdisplay(bbox_file, "\"valid_out\": \"%b\",", validTri_R13H);
-
-        $fdisplay(bbox_file, "\"tri_out\": [[\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"]]",
-        tri_R13S[0][0],
-        tri_R13S[0][1],
-        tri_R13S[0][2],
-        tri_R13S[1][0],
-        tri_R13S[1][1],
-        tri_R13S[1][2],
-        tri_R13S[2][0],
-        tri_R13S[2][1],
-        tri_R13S[2][2], 
-        ",");
-
-        $fdisplay(bbox_file, "\"color_out\": [\"%b\", \"%b\", \"%b\"]",
-        color_R13U[0],
-        color_R13U[1],
-        color_R13U[2],
-        ",");
-
-        $fdisplay(bbox_file, "\"box\": [[\"%b\", \"%b\"], [\"%b\", \"%b\"]]",
-        box_R13S[0][0],
-        box_R13S[0][1],
-        box_R13S[1][0],
-        box_R13S[1][1]);
-        //
+        //$fdisplay(bbox_file, "\"tri_in\": [[\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"]]",
+        //tri_R10S[0][0],
+        //tri_R10S[0][1],
+        //tri_R10S[0][2],
+        //tri_R10S[1][0],
+        //tri_R10S[1][1],
+        //tri_R10S[1][2],
+        //tri_R10S[2][0],
+        //tri_R10S[2][1],
+        //tri_R10S[2][2], 
         //",");
 
-        $fdisplay(bbox_file, "},");
+        //$fdisplay(bbox_file, "\"color_in\": [\"%b\", \"%b\", \"%b\"]",
+        //color_R10U[0],
+        //color_R10U[1],
+        //color_R10U[2], 
+        //",");
+
+        //$fdisplay(bbox_file, "\"screen_max\": [\"%b\", \"%b\"],", screen_RnnnnS[0], screen_RnnnnS[1]);
+
+        //$fdisplay(bbox_file, "\"sample_size\": \"%b\",", subSample_RnnnnU);
+
+        //$fdisplay(bbox_file, "\"halt\": \"%b\",", halt_RnnnnL);
+
+        //$fdisplay(bbox_file, "\"valid_out\": \"%b\",", validTri_R13H);
+
+        //$fdisplay(bbox_file, "\"tri_out\": [[\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"]]",
+        //tri_R13S[0][0],
+        //tri_R13S[0][1],
+        //tri_R13S[0][2],
+        //tri_R13S[1][0],
+        //tri_R13S[1][1],
+        //tri_R13S[1][2],
+        //tri_R13S[2][0],
+        //tri_R13S[2][1],
+        //tri_R13S[2][2], 
+        //",");
+
+        //$fdisplay(bbox_file, "\"color_out\": [\"%b\", \"%b\", \"%b\"]",
+        //color_R13U[0],
+        //color_R13U[1],
+        //color_R13U[2],
+        //",");
+
+        //$fdisplay(bbox_file, "\"box\": [[\"%b\", \"%b\"], [\"%b\", \"%b\"]]",
+        //box_R13S[0][0],
+        //box_R13S[0][1],
+        //box_R13S[1][0],
+        //box_R13S[1][1]);
+        ////
+        ////",");
+
+        //$fdisplay(bbox_file, "},");
     end 
 
     test_iterator #(
@@ -282,64 +282,64 @@ module rast
     );
 
     always @(posedge clk) begin
-        $fdisplay(iterator_file, "{\"RESET\": \"%b\",", rst);
+        //$fdisplay(iterator_file, "{\"RESET\": \"%b\",", rst);
 
-        $fdisplay(iterator_file, "\"tri_in\": [[\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"]]",
-        tri_R13S[0][0],
-        tri_R13S[0][1],
-        tri_R13S[0][2],
-        tri_R13S[1][0],
-        tri_R13S[1][1],
-        tri_R13S[1][2],
-        tri_R13S[2][0],
-        tri_R13S[2][1],
-        tri_R13S[2][2], 
-        ",");
+        //$fdisplay(iterator_file, "\"tri_in\": [[\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", //\"%b\"]]",
+        //tri_R13S[0][0],
+        //tri_R13S[0][1],
+        //tri_R13S[0][2],
+        //tri_R13S[1][0],
+        //tri_R13S[1][1],
+        //tri_R13S[1][2],
+        //tri_R13S[2][0],
+        //tri_R13S[2][1],
+        //tri_R13S[2][2], 
+        //",");
 
-        $fdisplay(iterator_file, "\"color_in\": [\"%b\", \"%b\", \"%b\"]",
-        color_R13U[0],
-        color_R13U[1],
-        color_R13U[2],
-        ",");
+        //$fdisplay(iterator_file, "\"color_in\": [\"%b\", \"%b\", \"%b\"]",
+        //color_R13U[0],
+        //color_R13U[1],
+        //color_R13U[2],
+        //",");
 
-        $fdisplay(iterator_file, "\"valid_in\": \"%b\",", validTri_R13H);
+        //$fdisplay(iterator_file, "\"valid_in\": \"%b\",", validTri_R13H);
 
-        $fdisplay(iterator_file, "\"box\": [[\"%b\", \"%b\"], [\"%b\", \"%b\"]]",
-        box_R13S[0][0],
-        box_R13S[0][1],
-        box_R13S[1][0],
-        box_R13S[1][1],
-        ",");
+        //$fdisplay(iterator_file, "\"box\": [[\"%b\", \"%b\"], [\"%b\", \"%b\"]]",
+        //box_R13S[0][0],
+        //box_R13S[0][1],
+        //box_R13S[1][0],
+        //box_R13S[1][1],
+        //",");
 
-        $fdisplay(iterator_file, "\"sample_size\": \"%b\",", subSample_RnnnnU);
-        $fdisplay(iterator_file, "\"halt\": \"%b\",", halt_RnnnnL);
+        //$fdisplay(iterator_file, "\"sample_size\": \"%b\",", subSample_RnnnnU);
+        //$fdisplay(iterator_file, "\"halt\": \"%b\",", halt_RnnnnL);
 
-        $fdisplay(iterator_file, "\"tri_out\": [[\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"]]",
-        tri_R14S[0][0],
-        tri_R14S[0][1],
-        tri_R14S[0][2],
-        tri_R14S[1][0],
-        tri_R14S[1][1],
-        tri_R14S[1][2],
-        tri_R14S[2][0],
-        tri_R14S[2][1],
-        tri_R14S[2][2], 
-        ",");
+        //$fdisplay(iterator_file, "\"tri_out\": [[\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", //\"%b\"]]",
+        //tri_R14S[0][0],
+        //tri_R14S[0][1],
+        //tri_R14S[0][2],
+        //tri_R14S[1][0],
+        //tri_R14S[1][1],
+        //tri_R14S[1][2],
+        //tri_R14S[2][0],
+        //tri_R14S[2][1],
+        //tri_R14S[2][2], 
+        //",");
 
-        $fdisplay(iterator_file, "\"color_out\": [\"%b\", \"%b\", \"%b\"]",
-        color_R14U[0],
-        color_R14U[1],
-        color_R14U[2],
-        ",");
+        //$fdisplay(iterator_file, "\"color_out\": [\"%b\", \"%b\", \"%b\"]",
+        //color_R14U[0],
+        //color_R14U[1],
+        //color_R14U[2],
+        //",");
 
-        $fdisplay(iterator_file, "\"sample\": [\"%b\", \"%b\"]",
-        sample_R14S[0],
-        sample_R14S[1],
-        ",");
+        //$fdisplay(iterator_file, "\"sample\": [\"%b\", \"%b\"]",
+        //sample_R14S[0],
+        //sample_R14S[1],
+        //",");
 
-        $fdisplay(iterator_file, "\"valid_sample\": \"%b\"},", validSamp_R14H);
+        //$fdisplay(iterator_file, "\"valid_sample\": \"%b\"},", validSamp_R14H);
 
-        //$fdisplay(iterator_file, ",");
+        ////$fdisplay(iterator_file, ",");
     end 
 
     hash_jtree #(
@@ -369,59 +369,59 @@ module rast
     );
 
     always @(posedge clk) begin
-        $fdisplay(hash_file, "{\"RESET\": \"%b\",", rst);
+        //$fdisplay(hash_file, "{\"RESET\": \"%b\",", rst);
 
-        $fdisplay(hash_file, "\"tri_in\": [[\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"]]",
-        tri_R14S[0][0],
-        tri_R14S[0][1],
-        tri_R14S[0][2],
-        tri_R14S[1][0],
-        tri_R14S[1][1],
-        tri_R14S[1][2],
-        tri_R14S[2][0],
-        tri_R14S[2][1],
-        tri_R14S[2][2], 
-        ",");
+        //$fdisplay(hash_file, "\"tri_in\": [[\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"]]",
+        //tri_R14S[0][0],
+        //tri_R14S[0][1],
+        //tri_R14S[0][2],
+        //tri_R14S[1][0],
+        //tri_R14S[1][1],
+        //tri_R14S[1][2],
+        //tri_R14S[2][0],
+        //tri_R14S[2][1],
+        //tri_R14S[2][2], 
+        //",");
 
-        $fdisplay(hash_file, "\"color_in\": [\"%b\", \"%b\", \"%b\"]",
-        color_R14U[0],
-        color_R14U[1],
-        color_R14U[2],
-        ",");
+        //$fdisplay(hash_file, "\"color_in\": [\"%b\", \"%b\", \"%b\"]",
+        //color_R14U[0],
+        //color_R14U[1],
+        //color_R14U[2],
+        //",");
 
-        $fdisplay(hash_file, "\"sample_in\": [\"%b\", \"%b\"]",
-        sample_R14S[0],
-        sample_R14S[1],
-        ",");
+        //$fdisplay(hash_file, "\"sample_in\": [\"%b\", \"%b\"]",
+        //sample_R14S[0],
+        //sample_R14S[1],
+        //",");
 
-        $fdisplay(hash_file, "\"valid_sample_in\": \"%b\",", validSamp_R14H);
+        //$fdisplay(hash_file, "\"valid_sample_in\": \"%b\",", validSamp_R14H);
 
-        $fdisplay(hash_file, "\"sample_size\": \"%b\",", subSample_RnnnnU);
+        //$fdisplay(hash_file, "\"sample_size\": \"%b\",", subSample_RnnnnU);
 
-        $fdisplay(hash_file, "\"tri_out\": [[\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"]]",
-        tri_R16S[0][0],
-        tri_R16S[0][1],
-        tri_R16S[0][2],
-        tri_R16S[1][0],
-        tri_R16S[1][1],
-        tri_R16S[1][2],
-        tri_R16S[2][0],
-        tri_R16S[2][1],
-        tri_R16S[2][2], 
-        ",");
+        //$fdisplay(hash_file, "\"tri_out\": [[\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"]]",
+        //tri_R16S[0][0],
+        //tri_R16S[0][1],
+        //tri_R16S[0][2],
+        //tri_R16S[1][0],
+        //tri_R16S[1][1],
+        //tri_R16S[1][2],
+        //tri_R16S[2][0],
+        //tri_R16S[2][1],
+        //tri_R16S[2][2], 
+        //",");
 
-        $fdisplay(hash_file, "\"color_out\": [\"%b\", \"%b\", \"%b\"]",
-        color_R16U[0],
-        color_R16U[1],
-        color_R16U[2],
-        ",");
+        //$fdisplay(hash_file, "\"color_out\": [\"%b\", \"%b\", \"%b\"]",
+        //color_R16U[0],
+        //color_R16U[1],
+        //color_R16U[2],
+        //",");
 
-        $fdisplay(hash_file, "\"sample_out\": [\"%b\", \"%b\"]",
-        sample_R16S[0],
-        sample_R16S[1],
-        ",");
+        //$fdisplay(hash_file, "\"sample_out\": [\"%b\", \"%b\"]",
+        //sample_R16S[0],
+        //sample_R16S[1],
+        //",");
 
-        $fdisplay(hash_file, "\"valid_sample_out\": \"%b\"},", validSamp_R16H);
+        //$fdisplay(hash_file, "\"valid_sample_out\": \"%b\"},", validSamp_R16H);
 
        // $fdisplay(hash_file, ",");
     end 
@@ -452,56 +452,56 @@ module rast
     // Generating vectors for sampletest, printed in the same order as the
     // signals in the magma module
     always @(posedge clk) begin
-        $fdisplay(sample_file, "{\"RESET\": \"%b\",", rst);
+        //$fdisplay(sample_file, "{\"RESET\": \"%b\",", rst);
 
-        $fdisplay(sample_file, "\"tri\": [[\"%h\", \"%h\", \"%h\"], [\"%h\", \"%h\", \"%h\"], [\"%h\", \"%h\", \"%h\"]]",
-        tri_R16S[0][0],
-        tri_R16S[0][1],
-        tri_R16S[0][2],
-        tri_R16S[1][0],
-        tri_R16S[1][1],
-        tri_R16S[1][2],
-        tri_R16S[2][0],
-        tri_R16S[2][1],
-        tri_R16S[2][2], 
-        ",");
+        //$fdisplay(sample_file, "\"tri\": [[\"%h\", \"%h\", \"%h\"], [\"%h\", \"%h\", \"%h\"], [\"%h\", \"%h\", \"%h\"]]",
+        //tri_R16S[0][0],
+        //tri_R16S[0][1],
+        //tri_R16S[0][2],
+        //tri_R16S[1][0],
+        //tri_R16S[1][1],
+        //tri_R16S[1][2],
+        //tri_R16S[2][0],
+        //tri_R16S[2][1],
+        //tri_R16S[2][2], 
+        //",");
 
-        $fdisplay(sample_file, "\"color_in\": [\"%h\", \"%h\", \"%h\"]",
-        color_R16U[0],
-        color_R16U[1],
-        color_R16U[2],
-        ",");
+        //$fdisplay(sample_file, "\"color_in\": [\"%h\", \"%h\", \"%h\"]",
+        //color_R16U[0],
+        //color_R16U[1],
+        //color_R16U[2],
+        //",");
 
-        $fdisplay(sample_file, "\"sample\": [\"%b\", \"%b\"]",
-        sample_R16S[0],
-        sample_R16S[1],
-        ",");
+        //$fdisplay(sample_file, "\"sample\": [\"%b\", \"%b\"]",
+        //sample_R16S[0],
+        //sample_R16S[1],
+        //",");
 
-        $fdisplay(sample_file, "\"valid_sample\": \"%b\",", validSamp_R16H);
+        //$fdisplay(sample_file, "\"valid_sample\": \"%b\",", validSamp_R16H);
 
-        $fdisplay(sample_file, "\"hit\": [\"%h\", \"%h\", \"%h\"]",
-        hit_R18S[0],
-        hit_R18S[1],
-        hit_R18S[2],
-        ",");
+        //$fdisplay(sample_file, "\"hit\": [\"%h\", \"%h\", \"%h\"]",
+        //hit_R18S[0],
+        //hit_R18S[1],
+        //hit_R18S[2],
+        //",");
 
-        $fdisplay(sample_file, "\"valid_hit\": \"%b\",", hit_valid_R18H);
+        //$fdisplay(sample_file, "\"valid_hit\": \"%b\",", hit_valid_R18H);
 
-        $fdisplay(sample_file, "\"color_out\": [\"%h\", \"%h\", \"%h\"]",
-        color_R18U[0],
-        color_R18U[1],
-        color_R18U[2]
-        );
+        //$fdisplay(sample_file, "\"color_out\": [\"%h\", \"%h\", \"%h\"]",
+        //color_R18U[0],
+        //color_R18U[1],
+        //color_R18U[2]
+        //);
 
-        $fdisplay(sample_file, "},");
+        //$fdisplay(sample_file, "},");
     end
 
     final begin
-        $fdisplay(bbox_file, "]");
-        $fdisplay(sample_file, "]");
-        $fdisplay(hash_file, "]");
-        $fdisplay(iterator_file, "]");
-        $fdisplay(rast_file, "]");
+        //$fdisplay(bbox_file, "]");
+        //$fdisplay(sample_file, "]");
+        //$fdisplay(hash_file, "]");
+        //$fdisplay(iterator_file, "]");
+        //$fdisplay(rast_file, "]");
     end 
 
 endmodule

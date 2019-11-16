@@ -268,7 +268,7 @@ for(genvar i = 0; i < 2; i = i + 1) begin
 
             //////// ASSIGN FRACTIONAL PORTION
             // START CODE HERE
-            unique case (subSample_RnnnnU)
+            case (subSample_RnnnnU)
                 4'b1000 : begin
                     rounded_box_R10S[i][j][RADIX-1:0] = box_R10S[i][j][RADIX-1:0] & 1'b0;
                 end
@@ -335,7 +335,7 @@ endgenerate
             out_box_R10S[1][0] = rounded_box_R10S[1][0];
         end
         if (rounded_box_R10S[1][1] > screen_RnnnnS[1]) begin
-            out_box_R10S[1][1] = screen_RnnnnS[0];
+            out_box_R10S[1][1] = screen_RnnnnS[1];
         end
         else begin
             out_box_R10S[1][1] = rounded_box_R10S[1][1];
@@ -344,18 +344,12 @@ endgenerate
         //$display("tri_R10S[0] %b", tri_R10S[0][0]);
 
         // Check if bbox is valid
-        //$display("validTri_R10H %b", validTri_R10H);
-        //$display("out_box_R10S[0][0] %h", out_box_R10S[0][0]);
-        //$display("out_box_R10S[0][1] %h", out_box_R10S[0][1]);
-        //$display("out_box_R10S[1][0] %h", out_box_R10S[1][0]);
-        //$display("out_box_R10S[1][1] %h", out_box_R10S[1][1]);
-        if (validTri_R10H && (out_box_R10S[0][0] < out_box_R10S[1][0] && out_box_R10S[0][1] < out_box_R10S[1][1])) 
+        
+        if (out_box_R10S[0][0] >= 0 && out_box_R10S[0][1] >= 0 && out_box_R10S[1][0] <  screen_RnnnnS[0] && out_box_R10S[1][1] <  screen_RnnnnS[1]) 
             outvalid_R10H = 1'b1;
         else 
             outvalid_R10H = 1'b0;
-        //$display("4 bnc");
-        //$display("tri_R10S[0] %b", tri_R10S[0][0]);
-        //$display("halt %b", halt_RnnnnL);
+        
         // END CODE HERE
 
     end

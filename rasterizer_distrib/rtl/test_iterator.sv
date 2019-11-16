@@ -314,7 +314,7 @@ if(MOD_FSM == 0) begin // Using baseline FSM
         // START CODE HERE
         // Try using a case statement on state_R14H
         //$display(state_R14H);
-        unique case (state_R14H)
+        case (state_R14H)
             WAIT_STATE : begin
                 // In waiting state until valid bbox appears at input
                 if (validTri_R13H) begin

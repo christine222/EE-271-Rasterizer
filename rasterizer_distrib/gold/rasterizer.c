@@ -10,14 +10,7 @@
 int min(int a, int b)
 {
   // START CODE HERE
-  if (a <= b)
-  {
-    return a;
-  }
-  else
-  {
-    return b;
-  }
+  return (a < b) ? a : b;
   // END CODE HERE
 }
 
@@ -28,14 +21,7 @@ int min(int a, int b)
 int max(int a, int b)
 {
   // START CODE HERE
-  if (a >= b)
-  {
-    return a;
-  }
-  else
-  {
-    return b;
-  }
+  return (a > b) ? a : b;
   // END CODE HERE
 }
 
@@ -46,12 +32,7 @@ int max(int a, int b)
 int floor_ss(int val, int r_shift, int ss_w_lg2)
 {
   // START CODE HERE
-  if (r_shift > ss_w_lg2) {
-    val = val >> (r_shift - ss_w_lg2);
-    return val << (r_shift - ss_w_lg2);
-  }
-  return val;
-  
+  return (val >> (r_shift - ss_w_lg2)) << (r_shift - ss_w_lg2);
   // END CODE HERE
 }
 
@@ -65,54 +46,35 @@ BoundingBox get_bounding_box(Triangle triangle, Screen screen, Config config)
   BoundingBox bbox;
 
   // START CODE HERE
-
   // initialize bounding box to first vertex
-  bbox.valid = 0;
   bbox.lower_left.x = triangle.v[0].x;
   bbox.lower_left.y = triangle.v[0].y;
-
   bbox.upper_right.x = triangle.v[0].x;
   bbox.upper_right.y = triangle.v[0].y;
 
   // iterate over remaining vertices
-  int minx1 = min(triangle.v[0].x, triangle.v[1].x); 
-  int maxx1 = max(triangle.v[0].x, triangle.v[1].x);  
-
-  int min_x = min(minx1, triangle.v[2].x);
-  int max_x = max(maxx1, triangle.v[2].x);
-
-  int miny1 = min(triangle.v[0].y, triangle.v[1].y);  
-  int maxy1 = max(triangle.v[0].y, triangle.v[1].y);    
-
-  int min_y = min(miny1, triangle.v[2].y);
-  int max_y = max(maxy1, triangle.v[2].y);
-
-  // round down to subsample grid
-  min_x = floor_ss(min_x, config.r_shift, config.ss_w_lg2);
-  max_x = floor_ss(max_x, config.r_shift, config.ss_w_lg2);
-
-  min_y = floor_ss(min_y, config.r_shift, config.ss_w_lg2);
-  max_y = floor_ss(max_y, config.r_shift, config.ss_w_lg2);
-
-  // clip to screen
-  max_x = max_x > screen.width ? screen.width : max_x;
-  max_y = max_y > screen.height ? screen.height : max_y;
-
-  min_x = min_x < 0 ? 0 : min_x;
-  min_y = min_y < 0 ? 0 : min_y;
-
-  // check if bbox is valid
-  //if (min_x < max_x && min_y < max_y){
-  bbox.lower_left.x = min_x;
-  bbox.lower_left.y = min_y;
-
-  bbox.upper_right.x = max_x;
-  bbox.upper_right.y = max_y;
-  
-  if (min_x < max_x && min_y < max_y){
-    bbox.valid = 1;
+  for (int vertex = 1; vertex < 3; vertex++)
+  {
+    bbox.upper_right.x = max(bbox.upper_right.x, triangle.v[vertex].x);
+    bbox.upper_right.y = max(bbox.upper_right.y, triangle.v[vertex].y);
+    bbox.lower_left.x = min(bbox.lower_left.x, triangle.v[vertex].x);
+    bbox.lower_left.y = min(bbox.lower_left.y, triangle.v[vertex].y);
   }
 
+  // round down to subsample grid
+  bbox.upper_right.x = floor_ss(bbox.upper_right.x, config.r_shift, config.ss_w_lg2);
+  bbox.upper_right.y = floor_ss(bbox.upper_right.y, config.r_shift, config.ss_w_lg2);
+  bbox.lower_left.x = floor_ss(bbox.lower_left.x, config.r_shift, config.ss_w_lg2);
+  bbox.lower_left.y = floor_ss(bbox.lower_left.y, config.r_shift, config.ss_w_lg2);
+
+  // clip to screen
+  bbox.upper_right.x = min(bbox.upper_right.x, screen.width);
+  bbox.upper_right.y = min(bbox.upper_right.y, screen.height);
+  bbox.lower_left.x = max(bbox.lower_left.x, 0);
+  bbox.lower_left.y = max(bbox.lower_left.y, 0);
+
+  // check if bbox is valid
+  bbox.valid = (bbox.lower_left.x >= 0) && (bbox.lower_left.y >= 0) && (bbox.upper_right.x < screen.width ) && (bbox.upper_right.y < screen.height);  
   // END CODE HERE
   return bbox;
 }
@@ -128,35 +90,31 @@ bool sample_test(Triangle triangle, Sample sample)
   bool isHit;
 
   // START CODE HERE
-  int y0 = triangle.v[0].y;
-  int y1 = triangle.v[1].y;
-  int y2 = triangle.v[2].y;
+  Triangle shifted_triangle;
+  for (int vertex = 0; vertex < 3; vertex++)
+  { // iterate over vertices
+    shifted_triangle.v[vertex].x = triangle.v[vertex].x - sample.x;
+    shifted_triangle.v[vertex].y = triangle.v[vertex].y - sample.y;
+  }
 
-  int x0 = triangle.v[0].x;
-  int x1 = triangle.v[1].x;
-  int x2 = triangle.v[2].x;
+  int distances[3];
+  distances[0] = (shifted_triangle.v[0].x * shifted_triangle.v[1].y) -
+                 (shifted_triangle.v[1].x * shifted_triangle.v[0].y);
+  distances[1] = (shifted_triangle.v[1].x * shifted_triangle.v[2].y) -
+                 (shifted_triangle.v[2].x * shifted_triangle.v[1].y);
+  distances[2] = (shifted_triangle.v[2].x * shifted_triangle.v[0].y) -
+                 (shifted_triangle.v[0].x * shifted_triangle.v[2].y);
 
-  int v0_x = x0 - sample.x;
-  int v0_y = y0 - sample.y;
-  int v1_x = x1 - sample.x;
-  int v1_y = y1 - sample.y;
-  int v2_x = x2 - sample.x;
-  int v2_y = y2 - sample.y;
+  bool tests[3];
+  tests[0] = distances[0] <= 0.0;
+  tests[1] = distances[1] < 0.0;
+  tests[2] = distances[2] <= 0.0;
 
-  int dist0 = v0_x * v1_y - v1_x * v0_y;
-  int dist1 = v1_x * v2_y - v2_x * v1_y;
-  int dist2 = v2_x * v0_y - v0_x * v2_y;
-
-  bool b0 = (dist0 <= 0.0);
-  bool b1 = (dist1 <  0.0);
-  bool b2 = (dist2 <= 0.0);
-  isHit = b0 && b1 && b2;
-
+  isHit = tests[0] && tests[1] && tests[2];
   // END CODE HERE
 
   return isHit;
 }
-
 
 int rasterize_triangle(Triangle triangle, ZBuff *z, Screen screen, Config config)
 {
