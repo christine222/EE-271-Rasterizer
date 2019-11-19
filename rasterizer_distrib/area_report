@@ -1,0 +1,33 @@
+Warning: Design 'rast' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+ 
+****************************************
+Report : area
+Design : rast
+Version: M-2016.12-SP2
+Date   : Mon Nov 18 21:21:13 2019
+****************************************
+
+Library(s) Used:
+
+    NangateOpenCellLibrary (File: /afs/.ir.stanford.edu/users/c/c/cchen97/ee271/EE-271-Rasterizer/rasterizer_distrib/lib/NangateOpenCellLibrary.db)
+
+Number of ports:                         2382
+Number of nets:                         19736
+Number of cells:                        14135
+Number of combinational cells:          11608
+Number of sequential cells:              2524
+Number of macros/black boxes:               0
+Number of buf/inv:                       2261
+Number of references:                       5
+
+Combinational area:              21134.232089
+Buf/Inv area:                     1375.220004
+Noncombinational area:           12642.182408
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                 33776.414497
+Total area:                 undefined
+
+Information: This design contains black box (unknown) components. (RPT-8)
+1

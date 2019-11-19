@@ -1,0 +1,74 @@
+Warning: Design 'rast' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : rast
+Version: M-2016.12-SP2
+Date   : Mon Nov 18 21:21:20 2019
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: typical   Library: NangateOpenCellLibrary
+Wire Load Model Mode: top
+
+  Startpoint: hash_jtree/d_hash_f3/genblk1[1].genblk1.dff_pipe/genblk1.dff_pipe/data_pipe_a_reg[1][9]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: sampletest/DP_OP_26J2_124_3834/clk_r_REG128_S5
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  rast               1K_hvratio_1_4        NangateOpenCellLibrary
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                 0.0000     0.0000
+  clock network delay (ideal)                           0.0000     0.0000
+  hash_jtree/d_hash_f3/genblk1[1].genblk1.dff_pipe/genblk1.dff_pipe/data_pipe_a_reg[1][9]/CK (DFFR_X1)
+                                                        0.0000 #   0.0000 r
+  hash_jtree/d_hash_f3/genblk1[1].genblk1.dff_pipe/genblk1.dff_pipe/data_pipe_a_reg[1][9]/Q (DFFR_X1)
+                                                        0.1106     0.1106 r
+  hash_jtree/sample_R16S[1][9] (hash_jtree_SIGFIG24_RADIX10_VERTS3_AXIS3_COLORS3_PIPE_DEPTH2)
+                                                        0.0000     0.1106 r
+  sampletest/sample_R16S[1][9] (sampletest_SIGFIG24_RADIX10_VERTS3_AXIS3_COLORS3_PIPE_DEPTH2)
+                                                        0.0000     0.1106 r
+  sampletest/U599/ZN (INV_X1)                           0.0359     0.1465 f
+  sampletest/U1196/ZN (NOR2_X2)                         0.0545     0.2009 r
+  sampletest/U1199/ZN (OAI21_X1)                        0.0422     0.2431 f
+  sampletest/U354/ZN (AOI21_X1)                         0.0717     0.3148 r
+  sampletest/U1238/ZN (OAI21_X1)                        0.0354     0.3502 f
+  sampletest/U1239/ZN (AOI21_X1)                        0.0589     0.4091 r
+  sampletest/U366/Z (BUF_X1)                            0.0562     0.4653 r
+  sampletest/U1538/ZN (OAI21_X1)                        0.0366     0.5019 f
+  sampletest/U1541/ZN (XNOR2_X1)                        0.0527     0.5546 f
+  sampletest/U1542/ZN (INV_X1)                          0.0476     0.6022 r
+  sampletest/U82/Z (CLKBUF_X2)                          0.0846     0.6868 r
+  sampletest/U6959/ZN (NOR2_X1)                         0.0493     0.7360 f
+  sampletest/U7120/CO (FA_X1)                           0.1094     0.8454 f
+  sampletest/U7135/CO (FA_X1)                           0.1017     0.9471 f
+  sampletest/U7093/CO (FA_X1)                           0.0876     1.0347 f
+  sampletest/U6962/S (FA_X1)                            0.1264     1.1611 r
+  sampletest/DP_OP_26J2_124_3834/clk_r_REG128_S5/D (DFFS_X1)
+                                                        0.0074     1.1686 r
+  data arrival time                                                1.1686
+
+  clock clk (rise edge)                                 1.2000     1.2000
+  clock network delay (ideal)                           0.0000     1.2000
+  sampletest/DP_OP_26J2_124_3834/clk_r_REG128_S5/CK (DFFS_X1)
+                                                        0.0000     1.2000 r
+  library setup time                                   -0.0314     1.1686
+  data required time                                               1.1686
+  --------------------------------------------------------------------------
+  data required time                                               1.1686
+  data arrival time                                               -1.1686
+  --------------------------------------------------------------------------
+  slack (MET)                                                      0.0001
+
+
+1

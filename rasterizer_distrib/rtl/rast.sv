@@ -88,7 +88,7 @@ module rast
         //$fdisplay(rast_file, "[");
     end
 
-    always @(posedge clk) begin
+    //always @(posedge clk) begin
         //$fdisplay(rast_file, "{\"RESET\": \"%b\",", rst);
 
         //$fdisplay(rast_file, "\"valid_in\": \"%b\",", validTri_R10H);
@@ -129,7 +129,7 @@ module rast
      //   ",");
 
        // $fdisplay(rast_file, "},");
-    end
+    //end
 
     //Intermediate Signals
     logic signed [SIGFIG-1:0]   box_R13S[1:0][1:0];             // 2 Sets X,Y Fixed Point Values
@@ -194,7 +194,7 @@ module rast
     // 'box': Array(2,Array(2,In(SInt(24)))), 'is_quad_in': Bits(1),
     // 'is_quad_out': Bits(1)}
 
-    always @(posedge clk) begin
+    //always @(posedge clk) begin
         //$fdisplay(bbox_file, "{\"RESET\": \"%b\",", rst);
 
         //$fdisplay(bbox_file, "\"valid_in\": \"%b\",", validTri_R10H);
@@ -252,7 +252,7 @@ module rast
         ////",");
 
         //$fdisplay(bbox_file, "},");
-    end 
+    //end 
 
     test_iterator #(
         .SIGFIG     (SIGFIG     ),
@@ -281,7 +281,7 @@ module rast
         .validSamp_R14H     (validSamp_R14H     )
     );
 
-    always @(posedge clk) begin
+    //always @(posedge clk) begin
         //$fdisplay(iterator_file, "{\"RESET\": \"%b\",", rst);
 
         //$fdisplay(iterator_file, "\"tri_in\": [[\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", //\"%b\"]]",
@@ -340,7 +340,7 @@ module rast
         //$fdisplay(iterator_file, "\"valid_sample\": \"%b\"},", validSamp_R14H);
 
         ////$fdisplay(iterator_file, ",");
-    end 
+    //end 
 
     hash_jtree #(
         .SIGFIG     (SIGFIG     ),
@@ -368,7 +368,7 @@ module rast
         .validSamp_R16H     (validSamp_R16H     )
     );
 
-    always @(posedge clk) begin
+    //always @(posedge clk) begin
         //$fdisplay(hash_file, "{\"RESET\": \"%b\",", rst);
 
         //$fdisplay(hash_file, "\"tri_in\": [[\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"], [\"%b\", \"%b\", \"%b\"]]",
@@ -424,7 +424,7 @@ module rast
         //$fdisplay(hash_file, "\"valid_sample_out\": \"%b\"},", validSamp_R16H);
 
        // $fdisplay(hash_file, ",");
-    end 
+    //end 
 
     sampletest #(
         .SIGFIG     (SIGFIG     ),
@@ -451,7 +451,7 @@ module rast
 
     // Generating vectors for sampletest, printed in the same order as the
     // signals in the magma module
-    always @(posedge clk) begin
+    //always @(posedge clk) begin
         //$fdisplay(sample_file, "{\"RESET\": \"%b\",", rst);
 
         //$fdisplay(sample_file, "\"tri\": [[\"%h\", \"%h\", \"%h\"], [\"%h\", \"%h\", \"%h\"], [\"%h\", \"%h\", \"%h\"]]",
@@ -494,7 +494,7 @@ module rast
         //);
 
         //$fdisplay(sample_file, "},");
-    end
+    //end
 
     final begin
         //$fdisplay(bbox_file, "]");

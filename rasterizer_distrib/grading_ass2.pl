@@ -12,7 +12,7 @@ print "Currently grading the tarball: $first\n" ;
 my $filesize = `du $first` ;
 my @filesizes = split /\s+/ , $filesize ;
 
-if( $filesizes[0] > 200 ){
+if( $filesizes[0] > 20000 ){
     print "TARBALL TOO LARGE !!!\n" ;
     print "Please clean all directories and remove unneccasary files \n";
     die "\n" ; #Remove for full grading
@@ -58,14 +58,14 @@ print "$verif_cmd\n";
 print "Running...\n";
 `$verif_cmd`;
 
-`ls sv_out.ppm` or die "Cannot find sv_out.ppm in your verif directory\n";
+`ls verif_out.ppm` or die "Cannot find verif_out.ppm in your verif directory\n";
 
 my $Status1 = 0 ;
 
-unless( `diff sv_out.ppm $reference` ){
+unless( `diff verif_out.ppm $reference` ){
     $Status1 = 1 ;
 }
-`ls | grep sv_out.ppm` or $Status1 = 0 ;
+`ls | grep verif_out.ppm` or $Status1 = 0 ;
 print "Finished. No fatal error so far...\n";
 
 
@@ -81,14 +81,14 @@ print "Finished. No fatal error so far...\n";
 # print "Running...\n";
 # `$verif_cmd`;
 
-# `ls sv_out.ppm` or die "Cannot find sv_out.ppm in your verif directory\n";
+# `ls verif_out.ppm` or die "Cannot find verif_out.ppm in your verif directory\n";
 
 # my $Status2 = 0 ;
 
-# unless( `diff sv_out.ppm $reference` ){
+# unless( `diff verif_out.ppm $reference` ){
 #     $Status2 = 1 ;
 # }
-# `ls | grep sv_out.ppm` or $Status2 = 0 ;
+# `ls | grep verif_out.ppm` or $Status2 = 0 ;
 
 # print "Finished. No fatal error so far...\n";
 

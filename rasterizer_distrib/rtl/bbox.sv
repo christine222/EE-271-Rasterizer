@@ -229,7 +229,11 @@ module bbox
     //assert property(@(posedge clk) $onehot(bbox_sel_R10H[1][1]));
 
     // Assertion to check if box is valid
-    assert property(@(posedge clk) $onehot(box_R10S[0][0] < box_R10S[1][0] && box_R10S[0][1] < box_R10S[1][1]));
+    
+    assert property(@(posedge clk) $onehot(box_R10S[0][0] >= 7'b0));
+    assert property(@(posedge clk) $onehot(box_R10S[0][1] >= 7'b0));
+    assert property(@(posedge clk) $onehot(box_R10S[1][0] < {screen_RnnnnS[0],7'b0}));
+    assert property(@(posedge clk) $onehot(box_R10S[1][1] < {screen_RnnnnS[1],7'b0}));
     // Assertions end
 
     // ***************** End of Step 1 *********************
@@ -268,7 +272,7 @@ for(genvar i = 0; i < 2; i = i + 1) begin
 
             //////// ASSIGN FRACTIONAL PORTION
             // START CODE HERE
-            case (subSample_RnnnnU)
+            unique case (subSample_RnnnnU)
                 4'b1000 : begin
                     rounded_box_R10S[i][j][RADIX-1:0] = box_R10S[i][j][RADIX-1:0] & 1'b0;
                 end
@@ -296,6 +300,7 @@ endgenerate
 
     //Assertion to help you debug errors in rounding
     
+
     assert property( @(posedge clk) (box_R10S[0][0] - rounded_box_R10S[0][0]) <= {subSample_RnnnnU,7'b0});
     assert property( @(posedge clk) (box_R10S[0][1] - rounded_box_R10S[0][1]) <= {subSample_RnnnnU,7'b0});
     assert property( @(posedge clk) (box_R10S[1][0] - rounded_box_R10S[1][0]) <= {subSample_RnnnnU,7'b0});
@@ -357,6 +362,7 @@ endgenerate
     //Assertion for checking if outvalid_R10H has been assigned properly
     assert property( @(posedge clk) (outvalid_R10H |-> out_box_R10S[1][0] <= screen_RnnnnS[0] ));
     assert property( @(posedge clk) (outvalid_R10H |-> out_box_R10S[1][1] <= screen_RnnnnS[1] ));
+
 
     // ***************** End of Step 3 *********************
 
@@ -493,6 +499,7 @@ endgenerate
     property rb_lt( rst, a, b, c );
         @(posedge clk) rst | ((a<=b) | !c);
     endproperty
+
 
     //Check that Lower Left of Bounding Box is less than equal Upper Right
     assert property( rb_lt( rst, box_R13S[0][0], box_R13S[1][0], validTri_R13H ));

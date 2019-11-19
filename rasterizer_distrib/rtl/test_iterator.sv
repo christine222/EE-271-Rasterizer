@@ -252,7 +252,7 @@ if(MOD_FSM == 0) begin // Using baseline FSM
 
     always_comb begin
         // START CODE HERE
-        case (subSample_RnnnnU)
+        unique case (subSample_RnnnnU)
             4'b1000 : begin
                 next_up_samp_R14S[0] = box_R14S[0][0];
                 next_up_samp_R14S[1][SIGFIG-1:RADIX] = sample_R14S[1][SIGFIG-1:RADIX] + 1'b1;
@@ -385,8 +385,10 @@ if(MOD_FSM == 0) begin // Using baseline FSM
 
     //Your assertions goes here
     // START CODE HERE
+
     assert property(@(posedge clk) state_R14H==WAIT_STATE ##1 validTri_R13H |=> state_R14H==TEST_STATE);
     assert property(@(posedge clk) state_R14H==TEST_STATE ##1 at_end_box_R14H |=> state_R14H==WAIT_STATE);
+
 
     // END CODE HERE
     // Assertion ends
@@ -406,9 +408,10 @@ if(MOD_FSM == 0) begin // Using baseline FSM
 
     //Check that Proposed Sample is in BBox
     // START CODE HERE
-    
+
     assert property( rb_lt( rst, next_sample_R14S[0], next_box_R14S[1][0], validTri_R13H ));
     assert property( rb_lt( rst, next_sample_R14S[1], next_box_R14S[1][1], validTri_R13H ));
+
     
     //always_comb begin
     //    $display("box[0][0] = %h", box_R13S[0][0]);
@@ -418,8 +421,10 @@ if(MOD_FSM == 0) begin // Using baseline FSM
     //    $display("sample[0] = %h", sample_R14S[0]);
     //    $display("sample[1] = %h", sample_R14S[1]);
     //end
+
     assert property( rb_lt( rst, next_box_R14S[0][0], next_sample_R14S[0], validTri_R13H ));
     assert property( rb_lt( rst, next_box_R14S[0][1], next_sample_R14S[1], validTri_R13H ));
+
     // END CODE HERE
     //Check that Proposed Sample is in BBox
 
