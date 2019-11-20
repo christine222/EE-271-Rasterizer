@@ -1,0 +1,12 @@
+20/11/2019 00:20:54
+testing vec_271_01_sv.dat
+make took 3009 seconds -> 50.15000000000000000000 minutes
+SUCCESS
+20/11/2019 01:11:03
+testing vec_271_02_sv.dat
+make took 1748 seconds -> 29.13333333333333333333 minutes
+SUCCESS
+20/11/2019 01:40:11
+testing vec_271_04_sv.dat
+make took 3402 seconds -> 56.70000000000000000000 minutes
+SUCCESS

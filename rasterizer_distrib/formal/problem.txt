@@ -7,7 +7,7 @@ verific: True
 synchronize: True
 
 [DEFAULT]
-bmc_length: 5
+bmc_length: 10
 precondition: reset_performed
 prove: True
 verification: safety

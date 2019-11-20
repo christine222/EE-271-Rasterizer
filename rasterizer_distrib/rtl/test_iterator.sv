@@ -317,24 +317,25 @@ if(MOD_FSM == 0) begin // Using baseline FSM
         case (state_R14H)
             WAIT_STATE : begin
                 // In waiting state until valid bbox appears at input
-                if (validTri_R13H) begin
                     next_tri_R14S = tri_R13S;
                     next_color_R14U = color_R13U;
                     next_sample_R14S = box_R13S[0];
-                    next_validSamp_R14H = validTri_R13H;
-                    next_halt_RnnnnL = 1'b0;
+                    next_validSamp_R14H = (validTri_R13H ? 1'b1 : 1'b0);
+                    next_halt_RnnnnL = (validTri_R13H ? 1'b0 : 1'b1);
                     next_box_R14S = box_R13S;
-                    next_state_R14H = TEST_STATE;
+                    next_state_R14H = (validTri_R13H ? TEST_STATE : WAIT_STATE);
+                /*
                 end
                 else begin
                     next_tri_R14S = tri_R13S;
                     next_color_R14U = color_R13U;
                     next_sample_R14S = box_R13S[0];     
-                    next_validSamp_R14H = !validTri_R13H;
+                    next_validSamp_R14H = 1'b0;
                     next_halt_RnnnnL = 1'b1;
                     next_box_R14S = box_R13S;
                     next_state_R14H = WAIT_STATE;
                 end
+                */
             end
             TEST_STATE : begin
                 //$display("beginning of teststate");
@@ -396,8 +397,8 @@ if(MOD_FSM == 0) begin // Using baseline FSM
     assert property( rb_lt( rst, next_sample_R14S[0], next_box_R14S[1][0], next_validSamp_R14H ));
     assert property( rb_lt( rst, next_sample_R14S[1], next_box_R14S[1][1], next_validSamp_R14H ));
 
-    assert property( rb_lt( rst, next_box_R14S[0][0], next_sample_R14S[0], next_validSamp_R14H ));
-    assert property( rb_lt( rst, next_box_R14S[0][1], next_sample_R14S[1], next_validSamp_R14H ));
+    assert property( rb_lt( rst, next_box_R14S[0][0], next_sample_R14S[0], validTri_R13H ));
+    assert property( rb_lt( rst, next_box_R14S[0][1], next_sample_R14S[1], validTri_R13H ));
 
     // END CODE HERE
     //Check that Proposed Sample is in BBox

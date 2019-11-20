@@ -1,0 +1,125 @@
+Parsing file "rast.sv"... DONE
+Parsing file "rst_beh.ets"... DONE
+Solving "embedded_assertion_0" ........... UNKNOWN
+Solving "embedded_assertion_1" ........... UNKNOWN
+Solving "embedded_assertion_2" .. TRUE
+Solving "embedded_assertion_3" .. TRUE
+Solving "embedded_assertion_4" .. TRUE
+Solving "embedded_assertion_5" .. TRUE
+Solving "embedded_assertion_6" .. TRUE
+Solving "embedded_assertion_7" .. TRUE
+Solving "embedded_assertion_8" .. TRUE
+Solving "embedded_assertion_9" .. TRUE
+Solving "embedded_assertion_10" .. TRUE
+Solving "embedded_assertion_11" .. TRUE
+Solving "embedded_assertion_12" .. TRUE
+Solving "embedded_assertion_13" .. TRUE
+Solving "embedded_assertion_14" .. TRUE
+Solving "embedded_assertion_15" .. TRUE
+Solving "embedded_assertion_16" .. TRUE
+Solving "embedded_assertion_17" ........... UNKNOWN
+Solving "embedded_assertion_18" ........... UNKNOWN
+Solving "embedded_assertion_19" ........... UNKNOWN
+Solving "embedded_assertion_20" ........... UNKNOWN
+Solving "embedded_assertion_21" .. TRUE
+Solving "embedded_assertion_22" .. TRUE
+
+*** SUMMARY ***
+
+** Problem embedded_assertion_0 **
+Description: Embedded assertion number 0
+Result: UNKNOWN
+BMC depth: 10
+
+** Problem embedded_assertion_1 **
+Description: Embedded assertion number 1
+Result: UNKNOWN
+BMC depth: 10
+
+** Problem embedded_assertion_2 **
+Description: Embedded assertion number 2
+Result: TRUE
+
+** Problem embedded_assertion_3 **
+Description: Embedded assertion number 3
+Result: TRUE
+
+** Problem embedded_assertion_4 **
+Description: Embedded assertion number 4
+Result: TRUE
+
+** Problem embedded_assertion_5 **
+Description: Embedded assertion number 5
+Result: TRUE
+
+** Problem embedded_assertion_6 **
+Description: Embedded assertion number 6
+Result: TRUE
+
+** Problem embedded_assertion_7 **
+Description: Embedded assertion number 7
+Result: TRUE
+
+** Problem embedded_assertion_8 **
+Description: Embedded assertion number 8
+Result: TRUE
+
+** Problem embedded_assertion_9 **
+Description: Embedded assertion number 9
+Result: TRUE
+
+** Problem embedded_assertion_10 **
+Description: Embedded assertion number 10
+Result: TRUE
+
+** Problem embedded_assertion_11 **
+Description: Embedded assertion number 11
+Result: TRUE
+
+** Problem embedded_assertion_12 **
+Description: Embedded assertion number 12
+Result: TRUE
+
+** Problem embedded_assertion_13 **
+Description: Embedded assertion number 13
+Result: TRUE
+
+** Problem embedded_assertion_14 **
+Description: Embedded assertion number 14
+Result: TRUE
+
+** Problem embedded_assertion_15 **
+Description: Embedded assertion number 15
+Result: TRUE
+
+** Problem embedded_assertion_16 **
+Description: Embedded assertion number 16
+Result: TRUE
+
+** Problem embedded_assertion_17 **
+Description: Embedded assertion number 17
+Result: UNKNOWN
+BMC depth: 10
+
+** Problem embedded_assertion_18 **
+Description: Embedded assertion number 18
+Result: UNKNOWN
+BMC depth: 10
+
+** Problem embedded_assertion_19 **
+Description: Embedded assertion number 19
+Result: UNKNOWN
+BMC depth: 10
+
+** Problem embedded_assertion_20 **
+Description: Embedded assertion number 20
+Result: UNKNOWN
+BMC depth: 10
+
+** Problem embedded_assertion_21 **
+Description: Embedded assertion number 21
+Result: TRUE
+
+** Problem embedded_assertion_22 **
+Description: Embedded assertion number 22
+Result: TRUE

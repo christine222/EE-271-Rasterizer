@@ -170,50 +170,87 @@ module bbox
     // Here you need to determine the bounding box by comparing the vertices
     // and assigning box_R10S to be the proper coordinates
 
-    // START CODE HERE
-    
-    logic signed [SIGFIG-1:0]     max_1[1:0];
-    logic signed [SIGFIG-1:0]     max_2[1:0];
-    logic signed [SIGFIG-1:0]     min_1[1:0];
-    logic signed [SIGFIG-1:0]     min_2[1:0];
-
-    logic [1:0][5:0]        cmp_R10H ;             // Comparison Results
+    logic [1:0][2:0]        cmp_R10H ;             // Comparison Results
     logic [1:0][1:0][2:0]   bbox_sel_R10H ;        // Decoded Select for Unclamped Bbox
     logic [1:0][1:0]        clamp_R10H;                  // signal require clamping
     logic [1:0][1:0]        invalidate_R10H;             // tri out of bounds
 
-    /*
-    // area is too big with function tho
-    function signed [SIGFIG-1:0]  max (signed [SIGFIG-1:0] a, signed [SIGFIG-1:0] b);
-        return (a > b) ? a : b;
-    endfunction
-    function signed [SIGFIG-1:0]  min (signed [SIGFIG-1:0] a, signed [SIGFIG-1:0] b);
-        return (a < b) ? a : b;
-    endfunction
-    */
-
-    // Find Maximum and Minimum X and Y coordinate
-    // Then assign min and max to box coordinates
     always_comb begin
-        let max(a, b) = (a > b) ? a : b;
-        let min(a, b) = (a < b) ? a : b;
-        max_1[0] = max(tri_R10S[0][0], tri_R10S[1][0]);
-        max_2[0] = max(max_1[0], tri_R10S[2][0]);
+        cmp_R10H[0][0] = tri_R10S[0][0] < tri_R10S[1][0];
+        cmp_R10H[0][1] = tri_R10S[0][0] < tri_R10S[2][0];
+        cmp_R10H[0][2] = tri_R10S[1][0] < tri_R10S[2][0];
 
-        max_1[1] = max(tri_R10S[0][1], tri_R10S[1][1]);
-        max_2[1] = max(max_1[1], tri_R10S[2][1]);
+        cmp_R10H[1][0] = tri_R10S[0][1] < tri_R10S[1][1];
+        cmp_R10H[1][1] = tri_R10S[0][1] < tri_R10S[2][1];
+        cmp_R10H[1][2] = tri_R10S[1][1] < tri_R10S[2][1];
+    end
 
-        
-        min_1[0] = min(tri_R10S[0][0], tri_R10S[1][0]);
-        min_2[0] = min(min_1[0], tri_R10S[2][0]);
+    always_comb begin
+        // x
+        bbox_sel_R10H[0][0][0] = cmp_R10H[0][0] & cmp_R10H[0][1];
+        bbox_sel_R10H[0][0][1] = !cmp_R10H[0][0] & cmp_R10H[0][2];
+        bbox_sel_R10H[0][0][2] = !cmp_R10H[0][1] & !cmp_R10H[0][2];
+        bbox_sel_R10H[1][0][0] = !cmp_R10H[0][0] & !cmp_R10H[0][1];
+        bbox_sel_R10H[1][0][1] = cmp_R10H[0][0] & !cmp_R10H[0][2];
+        bbox_sel_R10H[1][0][2] = cmp_R10H[0][1] & cmp_R10H[0][2];
 
-        min_1[1] = min(tri_R10S[0][1], tri_R10S[1][1]);
-        min_2[1] = min(min_1[1], tri_R10S[2][1]);
+        // y
+        bbox_sel_R10H[0][1][0] = cmp_R10H[1][0] & cmp_R10H[1][1];
+        bbox_sel_R10H[0][1][1] = !cmp_R10H[1][0] & cmp_R10H[1][2];
+        bbox_sel_R10H[0][1][2] = !cmp_R10H[1][1] & !cmp_R10H[1][2];
+        bbox_sel_R10H[1][1][0] = !cmp_R10H[1][0] & !cmp_R10H[1][1];
+        bbox_sel_R10H[1][1][1] = cmp_R10H[1][0] & !cmp_R10H[1][2];
+        bbox_sel_R10H[1][1][2] = cmp_R10H[1][1] & cmp_R10H[1][2];
 
-        box_R10S[0][0] = min_2[0];
-        box_R10S[0][1] = min_2[1];
-        box_R10S[1][0] = max_2[0];
-        box_R10S[1][1] = max_2[1];
+        // lower left x
+        unique case( 1'b1 )
+            (bbox_sel_R10H[0][0][0]): box_R10S[0][0] = tri_R10S[0][0];
+            (bbox_sel_R10H[0][0][1]): box_R10S[0][0] = tri_R10S[1][0];
+            (bbox_sel_R10H[0][0][2]): box_R10S[0][0] = tri_R10S[2][0];
+        endcase
+
+        // lower left y
+        unique case( 1'b1 )
+            (bbox_sel_R10H[0][1][0]): box_R10S[0][1] = tri_R10S[0][1];
+            (bbox_sel_R10H[0][1][1]): box_R10S[0][1] = tri_R10S[1][1];
+            (bbox_sel_R10H[0][1][2]): box_R10S[0][1] = tri_R10S[2][1];
+        endcase
+
+        // upper right x
+        unique case( 1'b1 )
+            (bbox_sel_R10H[1][0][0]): box_R10S[1][0] = tri_R10S[0][0];
+            (bbox_sel_R10H[1][0][1]): box_R10S[1][0] = tri_R10S[1][0];
+            (bbox_sel_R10H[1][0][2]): box_R10S[1][0] = tri_R10S[2][0];
+        endcase
+
+        // upper right y
+        unique case( 1'b1 )
+            (bbox_sel_R10H[1][1][0]): box_R10S[1][1] = tri_R10S[0][1];
+            (bbox_sel_R10H[1][1][1]): box_R10S[1][1] = tri_R10S[1][1];
+            (bbox_sel_R10H[1][1][2]): box_R10S[1][1] = tri_R10S[2][1];
+        endcase
+
+        /*
+        // lower left x
+        if (bbox_sel_R10H[0][0][0]) box_R10S[0][0] = tri_R10S[0][0];
+        if (bbox_sel_R10H[0][0][1]) box_R10S[0][0] = tri_R10S[1][0];
+        if (bbox_sel_R10H[0][0][2]) box_R10S[0][0] = tri_R10S[2][0];
+
+        // lower left y
+        if (bbox_sel_R10H[0][1][0]) box_R10S[0][1] = tri_R10S[0][1];
+        if (bbox_sel_R10H[0][1][1]) box_R10S[0][1] = tri_R10S[1][1];
+        if (bbox_sel_R10H[0][1][2]) box_R10S[0][1] = tri_R10S[2][1];
+
+        // upper right x
+        if (bbox_sel_R10H[1][0][0]) box_R10S[1][0] = tri_R10S[0][0];
+        if (bbox_sel_R10H[1][0][1]) box_R10S[1][0] = tri_R10S[1][0];
+        if (bbox_sel_R10H[1][0][2]) box_R10S[1][0] = tri_R10S[2][0];
+
+        // upper right y
+        if (bbox_sel_R10H[1][1][0]) box_R10S[1][1] = tri_R10S[0][1];
+        if (bbox_sel_R10H[1][1][1]) box_R10S[1][1] = tri_R10S[1][1];
+        if (bbox_sel_R10H[1][1][2]) box_R10S[1][1] = tri_R10S[2][1];
+        */
     end
 
     //  DECLARE OTHER SIGNALS YOU NEED
@@ -233,18 +270,16 @@ module bbox
     // END CODE HERE
 
     //Assertions to check if all cases are covered and assignments are unique
-    //assert property(@(posedge clk) $onehot(bbox_sel_R10H[0][0]));
-    //assert property(@(posedge clk) $onehot(bbox_sel_R10H[0][1]));
-    //assert property(@(posedge clk) $onehot(bbox_sel_R10H[1][0]));
-    //assert property(@(posedge clk) $onehot(bbox_sel_R10H[1][1]));
+    assert property(@(posedge clk) $onehot(bbox_sel_R10H[0][0]));
+    assert property(@(posedge clk) $onehot(bbox_sel_R10H[0][1]));
+    assert property(@(posedge clk) $onehot(bbox_sel_R10H[1][0]));
+    assert property(@(posedge clk) $onehot(bbox_sel_R10H[1][1]));
 
     // Assertion to check if box is valid
-    
     assert property(@(posedge clk) $onehot(box_R10S[0][0] >= 7'b0));
     assert property(@(posedge clk) $onehot(box_R10S[0][1] >= 7'b0));
     assert property(@(posedge clk) $onehot(box_R10S[1][0] < {screen_RnnnnS[0],7'b0}));
     assert property(@(posedge clk) $onehot(box_R10S[1][1] < {screen_RnnnnS[1],7'b0}));
-    
     // Assertions end
 
     // ***************** End of Step 1 *********************
@@ -329,12 +364,10 @@ end
 endgenerate
 
     //Assertion to help you debug errors in rounding
-
     assert property( @(posedge clk) (box_R10S[0][0] - rounded_box_R10S[0][0]) <= {subSample_RnnnnU,7'b0});
     assert property( @(posedge clk) (box_R10S[0][1] - rounded_box_R10S[0][1]) <= {subSample_RnnnnU,7'b0});
     assert property( @(posedge clk) (box_R10S[1][0] - rounded_box_R10S[1][0]) <= {subSample_RnnnnU,7'b0});
     assert property( @(posedge clk) (box_R10S[1][1] - rounded_box_R10S[1][1]) <= {subSample_RnnnnU,7'b0});
-
     // ***************** End of Step 2 *********************
 
 
@@ -389,7 +422,6 @@ endgenerate
     //Assertion for checking if outvalid_R10H has been assigned properly
     assert property( @(posedge clk) (outvalid_R10H |-> out_box_R10S[1][0] <= screen_RnnnnS[0] ));
     assert property( @(posedge clk) (outvalid_R10H |-> out_box_R10S[1][1] <= screen_RnnnnS[1] ));
-
 
     // ***************** End of Step 3 *********************
 
