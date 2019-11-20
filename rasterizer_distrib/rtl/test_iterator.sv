@@ -204,7 +204,7 @@ if(MOD_FSM == 0) begin // Using baseline FSM
     // we iterate sample points
 
     // define two more states, box_R14S and state_R14H
-    logic signed [SIGFIG-1:0]   box_R14S[1:0][1:0];    		// the state for current bounding box
+    logic signed [SIGFIG-1:0]   box_R14S[1:0][1:0];         // the state for current bounding box
     logic signed [SIGFIG-1:0]   next_box_R14S[1:0][1:0];
 
     state_t                     state_R14H;     //State Designation (Waiting or Testing)
@@ -318,20 +318,19 @@ if(MOD_FSM == 0) begin // Using baseline FSM
             WAIT_STATE : begin
                 // In waiting state until valid bbox appears at input
                 if (validTri_R13H) begin
-                    //$display("valid wait");
                     next_tri_R14S = tri_R13S;
                     next_color_R14U = color_R13U;
                     next_sample_R14S = box_R13S[0];
-                    next_validSamp_R14H = 1'b1;
+                    next_validSamp_R14H = validTri_R13H;
                     next_halt_RnnnnL = 1'b0;
                     next_box_R14S = box_R13S;
-                    next_state_R14H = TEST_STATE;                 
+                    next_state_R14H = TEST_STATE;
                 end
-                else begin  // next values can be anything (for tri, color, sample, box, etc.)
+                else begin
                     next_tri_R14S = tri_R13S;
                     next_color_R14U = color_R13U;
                     next_sample_R14S = box_R13S[0];     
-                    next_validSamp_R14H = 1'b0;
+                    next_validSamp_R14H = !validTri_R13H;
                     next_halt_RnnnnL = 1'b1;
                     next_box_R14S = box_R13S;
                     next_state_R14H = WAIT_STATE;
@@ -343,31 +342,21 @@ if(MOD_FSM == 0) begin // Using baseline FSM
                 next_box_R14S = box_R14S;
                 next_color_R14U = color_R14U;
                 if (!at_end_box_R14H && !at_right_edg_R14H) begin
-                    //$display("in first if");
                     next_sample_R14S = next_rt_samp_R14S;     
                     next_validSamp_R14H = 1'b1;
                     next_halt_RnnnnL = 1'b0;
                     next_state_R14H = TEST_STATE;
-                    //$display(next_state_R14H);
                 end
                 else if (!at_end_box_R14H && at_right_edg_R14H) begin
-                    //$display("not at end and at right edge");
-                    //next_tri_R14S = tri_R13S;
-                    //next_color_R14U = color_R13U;
                     next_sample_R14S = next_up_samp_R14S;     
                     next_validSamp_R14H = 1'b1;
                     next_halt_RnnnnL = 1'b0;
-                    //next_box_R14S = box_R13S;
                     next_state_R14H = TEST_STATE;
-                    //$display("finished not at end at right edge");
                 end
                 else begin
-                    //next_tri_R14S = tri_R13S;
-                    //next_color_R14U = color_R13U;
                     next_sample_R14S = box_R14S[0];     
                     next_validSamp_R14H = 1'b0;
                     next_halt_RnnnnL = 1'b1;
-                    //next_box_R14S = box_R13S;
                     next_state_R14H = WAIT_STATE;
                 end
             end
@@ -385,11 +374,8 @@ if(MOD_FSM == 0) begin // Using baseline FSM
 
     //Your assertions goes here
     // START CODE HERE
-
-    assert property(@(posedge clk) state_R14H==WAIT_STATE ##1 validTri_R13H |=> state_R14H==TEST_STATE);
-    assert property(@(posedge clk) state_R14H==TEST_STATE ##1 at_end_box_R14H |=> state_R14H==WAIT_STATE);
-
-
+    assert property(@(posedge clk) state_R14H==WAIT_STATE && validTri_R13H==1'b1 |-> next_state_R14H==TEST_STATE);
+    assert property(@(posedge clk) state_R14H==TEST_STATE && at_end_box_R14H==1'b1 |-> next_state_R14H==WAIT_STATE);
     // END CODE HERE
     // Assertion ends
     //////
@@ -405,25 +391,13 @@ if(MOD_FSM == 0) begin // Using baseline FSM
         @(posedge clk) rst | ((a<=b) | !c);
     endproperty
 
-
     //Check that Proposed Sample is in BBox
     // START CODE HERE
+    assert property( rb_lt( rst, next_sample_R14S[0], next_box_R14S[1][0], next_validSamp_R14H ));
+    assert property( rb_lt( rst, next_sample_R14S[1], next_box_R14S[1][1], next_validSamp_R14H ));
 
-    assert property( rb_lt( rst, next_sample_R14S[0], next_box_R14S[1][0], validTri_R13H ));
-    assert property( rb_lt( rst, next_sample_R14S[1], next_box_R14S[1][1], validTri_R13H ));
-
-    
-    //always_comb begin
-    //    $display("box[0][0] = %h", box_R13S[0][0]);
-    //    $display("box[0][1] = %h", box_R13S[0][1]);
-    //    $display("box[1][0] = %h", box_R13S[1][0]);
-    //    $display("box[1][1] = %h", box_R13S[1][1]);
-    //    $display("sample[0] = %h", sample_R14S[0]);
-    //    $display("sample[1] = %h", sample_R14S[1]);
-    //end
-
-    assert property( rb_lt( rst, next_box_R14S[0][0], next_sample_R14S[0], validTri_R13H ));
-    assert property( rb_lt( rst, next_box_R14S[0][1], next_sample_R14S[1], validTri_R13H ));
+    assert property( rb_lt( rst, next_box_R14S[0][0], next_sample_R14S[0], next_validSamp_R14H ));
+    assert property( rb_lt( rst, next_box_R14S[0][1], next_sample_R14S[1], next_validSamp_R14H ));
 
     // END CODE HERE
     //Check that Proposed Sample is in BBox

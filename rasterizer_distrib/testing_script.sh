@@ -4,22 +4,22 @@
 # ./testing_script.sh
 
 declare -a imgs=(
+        "vec_271_01_sv_short.dat"
+        "vec_271_02_sv_short.dat"
+        "vec_271_03_sv_short.dat"
+        "vec_271_04_sv_short.dat"
         "vec_271_01_sv.dat"
-				"vec_271_01_sv_short.dat" 
-				"vec_271_02_sv.dat" 
-				"vec_271_02_sv_short.dat"
-				"vec_271_03_sv_short.dat"
-				"vec_271_04_sv.dat"
-				"vec_271_04_sv_short.dat")
+        "vec_271_02_sv.dat" 
+        "vec_271_04_sv.dat")
 
 declare -a refs=(
+        "vec_271_01_sv_short_ref.ppm" 
+        "vec_271_02_sv_short_ref.ppm"
+        "vec_271_03_sv_short_ref.ppm"
+        "vec_271_04_sv_short_ref.ppm"
         "vec_271_01_sv_ref.ppm"
-				"vec_271_01_sv_short_ref.ppm" 
-				"vec_271_02_sv_ref.ppm" 
-				"vec_271_02_sv_short_ref.ppm"
-				"vec_271_03_sv_short_ref.ppm"
-				"vec_271_04_sv_ref.ppm"
-				"vec_271_04_sv_short_ref.ppm")
+        "vec_271_02_sv_ref.ppm" 
+        "vec_271_04_sv_ref.ppm")
 
 file=~/ee271/EE-271-Rasterizer/rasterizer_distrib/output_test.txt
 counter=0

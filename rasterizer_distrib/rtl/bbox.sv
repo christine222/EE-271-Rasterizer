@@ -182,6 +182,16 @@ module bbox
     logic [1:0][1:0]        clamp_R10H;                  // signal require clamping
     logic [1:0][1:0]        invalidate_R10H;             // tri out of bounds
 
+    /*
+    // area is too big with function tho
+    function signed [SIGFIG-1:0]  max (signed [SIGFIG-1:0] a, signed [SIGFIG-1:0] b);
+        return (a > b) ? a : b;
+    endfunction
+    function signed [SIGFIG-1:0]  min (signed [SIGFIG-1:0] a, signed [SIGFIG-1:0] b);
+        return (a < b) ? a : b;
+    endfunction
+    */
+
     // Find Maximum and Minimum X and Y coordinate
     // Then assign min and max to box coordinates
     always_comb begin
@@ -234,6 +244,7 @@ module bbox
     assert property(@(posedge clk) $onehot(box_R10S[0][1] >= 7'b0));
     assert property(@(posedge clk) $onehot(box_R10S[1][0] < {screen_RnnnnS[0],7'b0}));
     assert property(@(posedge clk) $onehot(box_R10S[1][1] < {screen_RnnnnS[1],7'b0}));
+    
     // Assertions end
 
     // ***************** End of Step 1 *********************
@@ -261,7 +272,6 @@ module bbox
 
 //Round LowerLeft and UpperRight for X and Y
 generate
-logic signed [RADIX-1:0]     mask;
 for(genvar i = 0; i < 2; i = i + 1) begin
     for(genvar j = 0; j < 2; j = j + 1) begin
         
@@ -272,6 +282,25 @@ for(genvar i = 0; i < 2; i = i + 1) begin
 
             //////// ASSIGN FRACTIONAL PORTION
             // START CODE HERE
+            
+            unique case (subSample_RnnnnU)
+                4'b1000 : begin
+                    rounded_box_R10S[i][j][RADIX-1:0] = box_R10S[i][j][RADIX-1:0] & {RADIX{1'b0}};
+                end
+                4'b0100 : begin
+                    rounded_box_R10S[i][j][RADIX-1] = box_R10S[i][j][RADIX-1] & 1'b1;
+                    rounded_box_R10S[i][j][RADIX-2:0] = box_R10S[i][j][RADIX-2:0] & {RADIX-1{1'b0}};
+                end
+                4'b0010 : begin
+                    rounded_box_R10S[i][j][RADIX-1:RADIX-2] = box_R10S[i][j][RADIX-1:RADIX-2] & 2'b11;
+                    rounded_box_R10S[i][j][RADIX-3:0] = box_R10S[i][j][RADIX-3:0] & {RADIX-2{1'b0}};
+                end
+                4'b0001 : begin
+                    rounded_box_R10S[i][j][RADIX-1:RADIX-3] = box_R10S[i][j][RADIX-1:RADIX-3] & 3'b111;
+                    rounded_box_R10S[i][j][RADIX-4:0] = box_R10S[i][j][RADIX-4:0] & {RADIX-3{1'b0}};
+                end
+            endcase
+            /*
             unique case (subSample_RnnnnU)
                 4'b1000 : begin
                     rounded_box_R10S[i][j][RADIX-1:0] = box_R10S[i][j][RADIX-1:0] & 1'b0;
@@ -290,6 +319,7 @@ for(genvar i = 0; i < 2; i = i + 1) begin
                     rounded_box_R10S[i][j][RADIX-4:0] = box_R10S[i][j][RADIX-4:0] & 1'b0;
                 end
             endcase
+            */
             // END CODE HERE
 
         end // always_comb
@@ -299,7 +329,6 @@ end
 endgenerate
 
     //Assertion to help you debug errors in rounding
-    
 
     assert property( @(posedge clk) (box_R10S[0][0] - rounded_box_R10S[0][0]) <= {subSample_RnnnnU,7'b0});
     assert property( @(posedge clk) (box_R10S[0][1] - rounded_box_R10S[0][1]) <= {subSample_RnnnnU,7'b0});
@@ -345,12 +374,9 @@ endgenerate
         else begin
             out_box_R10S[1][1] = rounded_box_R10S[1][1];
         end
-        //$display("3 bnc");
-        //$display("tri_R10S[0] %b", tri_R10S[0][0]);
 
         // Check if bbox is valid
-        
-        if (out_box_R10S[0][0] >= 0 && out_box_R10S[0][1] >= 0 && out_box_R10S[1][0] <  screen_RnnnnS[0] && out_box_R10S[1][1] <  screen_RnnnnS[1]) 
+        if (out_box_R10S[0][0] >= 0 && out_box_R10S[0][1] >= 0 && out_box_R10S[1][0] <  screen_RnnnnS[0] && out_box_R10S[1][1] <  screen_RnnnnS[1] && validTri_R10H) 
             outvalid_R10H = 1'b1;
         else 
             outvalid_R10H = 1'b0;
@@ -358,6 +384,7 @@ endgenerate
         // END CODE HERE
 
     end
+
 
     //Assertion for checking if outvalid_R10H has been assigned properly
     assert property( @(posedge clk) (outvalid_R10H |-> out_box_R10S[1][0] <= screen_RnnnnS[0] ));
@@ -500,20 +527,12 @@ endgenerate
         @(posedge clk) rst | ((a<=b) | !c);
     endproperty
 
-
     //Check that Lower Left of Bounding Box is less than equal Upper Right
     assert property( rb_lt( rst, box_R13S[0][0], box_R13S[1][0], validTri_R13H ));
     assert property( rb_lt( rst, box_R13S[0][1], box_R13S[1][1], validTri_R13H ));
+    
     //Check that Lower Left of Bounding Box is less than equal Upper Right
 
     //Error Checking Assertions
 
 endmodule
-
-
-
-
-
-
-
-
