@@ -242,6 +242,8 @@ if(MOD_FSM == 0) begin // Using baseline FSM
     logic                       at_top_edg_R14H;        //Current sample at top edge of bbox?
     logic                       at_end_box_R14H;        //Current sample at end of bbox?
 
+    logic                       is_back_face_R14H; // Current triangle back face?
+
     //////
     ////// First calculate the values of the helper signals using CURRENT STATES
     //////
@@ -249,6 +251,20 @@ if(MOD_FSM == 0) begin // Using baseline FSM
     // check the comments 'A Note on Signal Names'
     // at the begining of the module for the help on
     // understanding the signals here
+
+    logic signed [SIGFIG-1:0] x0 = tri_R13S[0][0];
+    logic signed [SIGFIG-1:0] x1 = tri_R13S[1][0];
+    logic signed [SIGFIG-1:0] x2 = tri_R13S[2][0];
+
+    logic signed [SIGFIG-1:0] y0 = tri_R13S[0][1];
+    logic signed [SIGFIG-1:0] y1 = tri_R13S[1][1];
+    logic signed [SIGFIG-1:0] y2 = tri_R13S[2][1];
+
+    // check if triangle is backfacing
+    always_comb begin
+        if ((x1 - x0)*(y2 - y1) - (x2 - x1) * (y1 - y0) > 0) is_back_face_R14H = 1'b1;
+        else is_back_face_R14H = 1'b0;
+    end
 
     always_comb begin
         // START CODE HERE
@@ -299,6 +315,8 @@ if(MOD_FSM == 0) begin // Using baseline FSM
 
         if (sample_R14S == box_R14S[1]) at_end_box_R14H = 1'b1;
         else at_end_box_R14H = 1'b0;
+
+
         // END CODE HERE
     end
 
@@ -323,7 +341,7 @@ if(MOD_FSM == 0) begin // Using baseline FSM
                     next_validSamp_R14H = (validTri_R13H ? 1'b1 : 1'b0);
                     next_halt_RnnnnL = (validTri_R13H ? 1'b0 : 1'b1);
                     next_box_R14S = box_R13S;
-                    next_state_R14H = (validTri_R13H ? TEST_STATE : WAIT_STATE);
+                    next_state_R14H = ((validTri_R13H && !is_back_face_R14H)? TEST_STATE : WAIT_STATE);
                 /*
                 end
                 else begin
@@ -342,6 +360,7 @@ if(MOD_FSM == 0) begin // Using baseline FSM
                 next_tri_R14S = tri_R14S;
                 next_box_R14S = box_R14S;
                 next_color_R14U = color_R14U;
+
                 if (!at_end_box_R14H && !at_right_edg_R14H) begin
                     next_sample_R14S = next_rt_samp_R14S;     
                     next_validSamp_R14H = 1'b1;
