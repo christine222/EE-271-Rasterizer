@@ -212,8 +212,6 @@ module bbox
         cmp_R10H[1][0] = tri_R10S[0][1] < tri_R10S[1][1];
         cmp_R10H[1][1] = tri_R10S[0][1] < tri_R10S[2][1];
         cmp_R10H[1][2] = tri_R10S[1][1] < tri_R10S[2][1];
-        
-
     end
 
     always_comb begin
@@ -411,40 +409,41 @@ endgenerate
     // outvalid_R10H high if validTri_R10H && BBox is valid
 
     always_comb begin
-        //////// ASSIGN "out_box_R10S" and "outvalid_R10H"
-        // START CODE HERE
-        if (rounded_box_R10S[0][0] < 0) begin
-            out_box_R10S[0][0] = 0;
-        end
-        else begin
-            out_box_R10S[0][0] = rounded_box_R10S[0][0];
-        end
-        if (rounded_box_R10S[0][1] < 0) begin
-            out_box_R10S[0][1] = 0;
-        end
-        else begin
-            out_box_R10S[0][1] = rounded_box_R10S[0][1];
-        end
-        if (rounded_box_R10S[1][0] > screen_RnnnnS[0]) begin
-            out_box_R10S[1][0] = screen_RnnnnS[0];
-        end
-        else begin
-            out_box_R10S[1][0] = rounded_box_R10S[1][0];
-        end
-        if (rounded_box_R10S[1][1] > screen_RnnnnS[1]) begin
-            out_box_R10S[1][1] = screen_RnnnnS[1];
-        end
-        else begin
-            out_box_R10S[1][1] = rounded_box_R10S[1][1];
-        end
+        if (halt_RnnnnL) begin
+            //////// ASSIGN "out_box_R10S" and "outvalid_R10H"
+            // START CODE HERE
+            if (rounded_box_R10S[0][0] < 0) begin
+                out_box_R10S[0][0] = 0;
+            end
+            else begin
+                out_box_R10S[0][0] = rounded_box_R10S[0][0];
+            end
+            if (rounded_box_R10S[0][1] < 0) begin
+                out_box_R10S[0][1] = 0;
+            end
+            else begin
+                out_box_R10S[0][1] = rounded_box_R10S[0][1];
+            end
+            if (rounded_box_R10S[1][0] > screen_RnnnnS[0]) begin
+                out_box_R10S[1][0] = screen_RnnnnS[0];
+            end
+            else begin
+                out_box_R10S[1][0] = rounded_box_R10S[1][0];
+            end
+            if (rounded_box_R10S[1][1] > screen_RnnnnS[1]) begin
+                out_box_R10S[1][1] = screen_RnnnnS[1];
+            end
+            else begin
+                out_box_R10S[1][1] = rounded_box_R10S[1][1];
+            end
 
-        // Check if bbox is valid
-        if (out_box_R10S[0][0] >= 0 && out_box_R10S[0][1] >= 0 && out_box_R10S[1][0] <  screen_RnnnnS[0] && out_box_R10S[1][1] <  screen_RnnnnS[1] && is_back_face_R14H) 
-            outvalid_R10H = 1'b1;
-        else 
-            outvalid_R10H = 1'b0;
-        // END CODE HERE
-
+            // Check if bbox is valid
+            if (out_box_R10S[0][0] >= 0 && out_box_R10S[0][1] >= 0 && out_box_R10S[1][0] <  screen_RnnnnS[0] && out_box_R10S[1][1] <  screen_RnnnnS[1] && is_back_face_R14H) 
+                outvalid_R10H = 1'b1;
+            else 
+                outvalid_R10H = 1'b0;
+            // END CODE HERE
+        end
     end
 
 
