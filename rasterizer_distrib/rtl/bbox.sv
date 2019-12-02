@@ -165,6 +165,35 @@ module bbox
     logic signed [SIGFIG-1:0]   box_R13S_retime[1:0][1:0];             // 2 Sets X,Y Fixed Point Values
     logic                           validTri_R13H_retime ;                 // Valid Data for Operation
     // output for retiming registers
+    
+    // Step 0 : check if backfacing
+    logic                      is_back_face_R14H; // Current triangle back face?
+    logic signed [SIGFIG-1:0]  x0;
+    logic signed [SIGFIG-1:0]  x1;
+    logic signed [SIGFIG-12:0] x0_1;
+    logic signed [SIGFIG-12:0] x1_1;
+
+    logic signed [SIGFIG-1:0]  y0;
+    logic signed [SIGFIG-1:0]  y1;
+    logic signed [SIGFIG-12:0] y0_1;
+    logic signed [SIGFIG-12:0] y1_1;
+
+    // check if triangle is backfacing
+    always_comb begin
+        x0 = tri_R10S[1][0] - tri_R10S[0][0];
+        x1 = tri_R10S[2][0] - tri_R10S[1][0];
+        x0_1 = x0[12:0];
+        x1_1 = x1[12:0];
+
+        y0 = tri_R10S[2][1] - tri_R10S[1][1];
+        y1 = tri_R10S[1][1] - tri_R10S[0][1];
+        y0_1 = y0[12:0];
+        y1_1 = y1[12:0];
+
+        if ((x0_1)*(y0_1) - (x1_1)*(y1_1) > 0) is_back_face_R14H = 1'b0;
+        else is_back_face_R14H = validTri_R10H;
+    end
+
 
     // ********** Step 1:  Determining a Bounding Box **********
     // Here you need to determine the bounding box by comparing the vertices
@@ -183,6 +212,8 @@ module bbox
         cmp_R10H[1][0] = tri_R10S[0][1] < tri_R10S[1][1];
         cmp_R10H[1][1] = tri_R10S[0][1] < tri_R10S[2][1];
         cmp_R10H[1][2] = tri_R10S[1][1] < tri_R10S[2][1];
+        
+
     end
 
     always_comb begin
@@ -251,6 +282,7 @@ module bbox
         if (bbox_sel_R10H[1][1][1]) box_R10S[1][1] = tri_R10S[1][1];
         if (bbox_sel_R10H[1][1][2]) box_R10S[1][1] = tri_R10S[2][1];
         */
+        
     end
 
     //  DECLARE OTHER SIGNALS YOU NEED
@@ -356,7 +388,6 @@ for(genvar i = 0; i < 2; i = i + 1) begin
             endcase
             */
             // END CODE HERE
-
         end // always_comb
 
     end
@@ -380,7 +411,6 @@ endgenerate
     // outvalid_R10H high if validTri_R10H && BBox is valid
 
     always_comb begin
-
         //////// ASSIGN "out_box_R10S" and "outvalid_R10H"
         // START CODE HERE
         if (rounded_box_R10S[0][0] < 0) begin
@@ -409,11 +439,10 @@ endgenerate
         end
 
         // Check if bbox is valid
-        if (out_box_R10S[0][0] >= 0 && out_box_R10S[0][1] >= 0 && out_box_R10S[1][0] <  screen_RnnnnS[0] && out_box_R10S[1][1] <  screen_RnnnnS[1] && validTri_R10H) 
+        if (out_box_R10S[0][0] >= 0 && out_box_R10S[0][1] >= 0 && out_box_R10S[1][0] <  screen_RnnnnS[0] && out_box_R10S[1][1] <  screen_RnnnnS[1] && is_back_face_R14H) 
             outvalid_R10H = 1'b1;
         else 
             outvalid_R10H = 1'b0;
-        
         // END CODE HERE
 
     end

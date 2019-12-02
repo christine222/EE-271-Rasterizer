@@ -99,6 +99,16 @@ module sampletest
     logic signed [SIGFIG-1:0]       hit_R16S[AXIS-1:0]; // Sample position
     // Signals in Access Order
 
+
+    logic signed [SIGFIG-12:0]       edge_R16S000;
+    logic signed [SIGFIG-12:0]       edge_R16S001;
+    logic signed [SIGFIG-12:0]       edge_R16S010;
+    logic signed [SIGFIG-12:0]       edge_R16S011;
+    logic signed [SIGFIG-12:0]       edge_R16S100;
+    logic signed [SIGFIG-12:0]       edge_R16S101;
+    logic signed [SIGFIG-12:0]       edge_R16S110;
+    logic signed [SIGFIG-12:0]       edge_R16S111;
+
     // Your job is to produce the value for hit_valid_R16H signal, which indicates whether a sample lies inside the triangle.
     // hit_valid_R16H is high if validSamp_R16H && sample inside triangle (with back face culling)
     // Consider the following steps:
@@ -131,10 +141,22 @@ module sampletest
         edge_R16S[1][1][1] = tri_R16S[2][1] - sample_R16S[1];
         edge_R16S[2][0][1] = tri_R16S[2][1] - sample_R16S[1];
 
-        // (3) Calculate distance x_1 * y_2 - x_2 * y_1
-        dist_lg_R16S[0] = edge_R16S[0][0][0] * edge_R16S[0][1][1] - edge_R16S[0][1][0] * edge_R16S[0][0][1];
-        dist_lg_R16S[1] = edge_R16S[0][1][0] * edge_R16S[1][1][1] - edge_R16S[1][1][0] * edge_R16S[0][1][1];
-        dist_lg_R16S[2] = edge_R16S[1][1][0] * edge_R16S[0][0][1] - edge_R16S[0][0][0] * edge_R16S[1][1][1];
+        // (3) Calculate distance x_1 * y_2 - x_2 * 
+        edge_R16S000 = edge_R16S[0][0][0][12:0];
+        edge_R16S001 = edge_R16S[0][0][1][12:0];
+        edge_R16S010 = edge_R16S[0][1][0][12:0];
+        edge_R16S011 = edge_R16S[0][1][1][12:0];
+        edge_R16S100 = edge_R16S[1][0][0][12:0];
+        edge_R16S101 = edge_R16S[1][0][1][12:0];
+        edge_R16S110 = edge_R16S[1][1][0][12:0];
+        edge_R16S111 = edge_R16S[1][1][1][12:0];
+
+        //$display("edge_R16S000 %b", edge_R16S000);
+        //$display("edge_R16S111 %b", edge_R16S111);
+
+        dist_lg_R16S[0] = edge_R16S000 * edge_R16S011 - edge_R16S010 * edge_R16S001;
+        dist_lg_R16S[1] = edge_R16S010 * edge_R16S111 - edge_R16S110 * edge_R16S011;
+        dist_lg_R16S[2] = edge_R16S110 * edge_R16S001 - edge_R16S000 * edge_R16S111;
 
         // (4) Check distance and assign hit_valid_R16H.
         hit_valid_R16H = (dist_lg_R16S[0] <= 0) && (dist_lg_R16S[1] < 0) && (dist_lg_R16S[2] <= 0);

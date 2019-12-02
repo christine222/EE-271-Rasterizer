@@ -1,0 +1,30 @@
+ 
+****************************************
+Report : area
+Design : rast
+Version: M-2016.12-SP2
+Date   : Sun Dec  1 17:41:40 2019
+****************************************
+
+Library(s) Used:
+
+    NangateOpenCellLibrary (File: /afs/.ir.stanford.edu/users/c/t/ctain/ee271/assignment2/assignment2/lib/NangateOpenCellLibrary.db)
+
+Number of ports:                          493
+Number of nets:                         12128
+Number of cells:                        10250
+Number of combinational cells:           7958
+Number of sequential cells:              2291
+Number of macros/black boxes:               0
+Number of buf/inv:                       2752
+Number of references:                      40
+
+Combinational area:              10643.724035
+Buf/Inv area:                     1480.556013
+Noncombinational area:           12182.002393
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                 22825.726428
+Total area:                 undefined
+1

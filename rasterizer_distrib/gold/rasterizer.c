@@ -73,8 +73,15 @@ BoundingBox get_bounding_box(Triangle triangle, Screen screen, Config config)
   bbox.lower_left.x = max(bbox.lower_left.x, 0);
   bbox.lower_left.y = max(bbox.lower_left.y, 0);
 
+  // CHANGE ME
+
+  if ((triangle.v[1].x - triangle.v[0].x)*(triangle.v[2].y - triangle.v[1].y) - (triangle.v[2].x - triangle.v[1].x)*(triangle.v[1].y - triangle.v[0].y) > 0) {
+    bbox.valid = 0;
+  }
+  else {
   // check if bbox is valid
-  bbox.valid = (bbox.lower_left.x >= 0) && (bbox.lower_left.y >= 0) && (bbox.upper_right.x < screen.width ) && (bbox.upper_right.y < screen.height);  
+    bbox.valid = (bbox.lower_left.x >= 0) && (bbox.lower_left.y >= 0) && (bbox.upper_right.x < screen.width ) && (bbox.upper_right.y < screen.height);  
+  }
   // END CODE HERE
   return bbox;
 }

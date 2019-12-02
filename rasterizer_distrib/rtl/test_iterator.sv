@@ -251,20 +251,40 @@ if(MOD_FSM == 0) begin // Using baseline FSM
     // check the comments 'A Note on Signal Names'
     // at the begining of the module for the help on
     // understanding the signals here
+/*
+    logic signed [SIGFIG-1:0] x0;
+    logic signed [SIGFIG-1:0] x1;
+    logic signed [SIGFIG-12:0] x0_1;
+    logic signed [SIGFIG-12:0] x1_1;
 
-    logic signed [SIGFIG-1:0] x0 = tri_R13S[0][0];
-    logic signed [SIGFIG-1:0] x1 = tri_R13S[1][0];
-    logic signed [SIGFIG-1:0] x2 = tri_R13S[2][0];
-
-    logic signed [SIGFIG-1:0] y0 = tri_R13S[0][1];
-    logic signed [SIGFIG-1:0] y1 = tri_R13S[1][1];
-    logic signed [SIGFIG-1:0] y2 = tri_R13S[2][1];
+    logic signed [SIGFIG-1:0] y0;
+    logic signed [SIGFIG-1:0] y1;
+    logic signed [SIGFIG-12:0] y0_1;
+    logic signed [SIGFIG-12:0] y1_1;
 
     // check if triangle is backfacing
     always_comb begin
-        if ((x1 - x0)*(y2 - y1) - (x2 - x1) * (y1 - y0) > 0) is_back_face_R14H = 1'b1;
+        x0 = tri_R13S[1][0] - tri_R13S[0][0];
+        x1 = tri_R13S[2][0] - tri_R13S[1][0];
+        x0_1 = x0[12:0];
+        x1_1 = x1[12:0];
+
+        y0 = tri_R13S[2][1] - tri_R13S[1][1];
+        y1 = tri_R13S[1][1] - tri_R13S[0][1];
+        y0_1 = y0[12:0];
+        y1_1 = y1[12:0];
+
+        //$display("tri_R13S[1][0] - tri_R13S[0][0] %b", x0);
+        //$display("tri_R13S[1][0] - tri_R13S[0][0] %b", tri_R13S[1][0][22:0] - tri_R13S[0][0][22:0]);
+        //$display("tri_R13S[2][1] - tri_R13S[1][1] %b", y0);
+        //$display("tri_R13S[2][1] - tri_R13S[1][1] %b", tri_R13S[2][1][22:0] - tri_R13S[1][1][22:0]);
+        //$display("x0 * y0 %b", x0*y0);
+        //$display("x0 * y0 %b", x0[22:0]*y0[22:0]);
+
+        if ((x0_1)*(y0_1) - (x1_1)*(y1_1) > 0) is_back_face_R14H = 1'b1;
         else is_back_face_R14H = 1'b0;
     end
+*/
 
     always_comb begin
         // START CODE HERE
@@ -341,19 +361,7 @@ if(MOD_FSM == 0) begin // Using baseline FSM
                     next_validSamp_R14H = (validTri_R13H ? 1'b1 : 1'b0);
                     next_halt_RnnnnL = (validTri_R13H ? 1'b0 : 1'b1);
                     next_box_R14S = box_R13S;
-                    next_state_R14H = ((validTri_R13H && !is_back_face_R14H)? TEST_STATE : WAIT_STATE);
-                /*
-                end
-                else begin
-                    next_tri_R14S = tri_R13S;
-                    next_color_R14U = color_R13U;
-                    next_sample_R14S = box_R13S[0];     
-                    next_validSamp_R14H = 1'b0;
-                    next_halt_RnnnnL = 1'b1;
-                    next_box_R14S = box_R13S;
-                    next_state_R14H = WAIT_STATE;
-                end
-                */
+                    next_state_R14H = ((validTri_R13H)? TEST_STATE : WAIT_STATE);
             end
             TEST_STATE : begin
                 //$display("beginning of teststate");

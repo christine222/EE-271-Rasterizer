@@ -1,0 +1,64 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : rast
+Version: M-2016.12-SP2
+Date   : Sun Dec  1 17:41:43 2019
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: typical   Library: NangateOpenCellLibrary
+Wire Load Model Mode: top
+
+  Startpoint: clk_r_REG990_S1
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: DP_OP_123J1_122_7305/clk_r_REG770_S2
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  rast               1K_hvratio_1_4        NangateOpenCellLibrary
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                 0.0000     0.0000
+  clock network delay (ideal)                           0.0000     0.0000
+  clk_r_REG990_S1/CK (DFFR_X1)                          0.0000     0.0000 r
+  clk_r_REG990_S1/Q (DFFR_X1)                           0.1151     0.1151 r
+  U1412/ZN (NAND2_X1)                                   0.0432     0.1583 f
+  U1471/ZN (NAND2_X1)                                   0.0393     0.1976 r
+  U1472/ZN (INV_X1)                                     0.0201     0.2177 f
+  U1296/ZN (AND2_X1)                                    0.0461     0.2638 f
+  U1545/ZN (OR2_X1)                                     0.0583     0.3221 f
+  U1244/Z (XOR2_X1)                                     0.0935     0.4156 f
+  U1642/ZN (OR2_X1)                                     0.0849     0.5005 f
+  U1709/CO (FA_X1)                                      0.1005     0.6010 f
+  U1776/CO (FA_X1)                                      0.1021     0.7031 f
+  U1986/CO (FA_X1)                                      0.1019     0.8050 f
+  U2011/S (FA_X1)                                       0.1556     0.9606 r
+  U1999/ZN (NAND2_X1)                                   0.0302     0.9908 f
+  U2000/ZN (NAND3_X1)                                   0.0437     1.0345 r
+  U2050/ZN (XNOR2_X1)                                   0.0651     1.0996 r
+  U2051/ZN (XNOR2_X1)                                   0.0567     1.1562 r
+  DP_OP_123J1_122_7305/clk_r_REG770_S2/D (DFFR_X1)      0.0072     1.1635 r
+  data arrival time                                                1.1635
+
+  clock clk (rise edge)                                 1.2000     1.2000
+  clock network delay (ideal)                           0.0000     1.2000
+  DP_OP_123J1_122_7305/clk_r_REG770_S2/CK (DFFR_X1)     0.0000     1.2000 r
+  library setup time                                   -0.0357     1.1643
+  data required time                                               1.1643
+  --------------------------------------------------------------------------
+  data required time                                               1.1643
+  data arrival time                                               -1.1635
+  --------------------------------------------------------------------------
+  slack (MET)                                                      0.0008
+
+
+1
