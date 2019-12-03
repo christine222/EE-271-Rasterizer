@@ -446,6 +446,12 @@ endgenerate
         end
     end
 
+    logic gated_clk;
+    logic prev_halt;
+    always_comb begin
+        gated_clk = clk && prev_halt;
+        prev_halt = halt_RnnnnL;
+    end
 
     //Assertion for checking if outvalid_R10H has been assigned properly
     assert property( @(posedge clk) (outvalid_R10H |-> out_box_R10S[1][0] <= screen_RnnnnS[0] ));
@@ -462,7 +468,7 @@ endgenerate
     )
     d_bbx_r1
     (
-        .clk    (clk                ),
+        .clk    (gated_clk                ),
         .reset  (rst                ),
         .en     (halt_RnnnnL        ),
         .in     (tri_R10S          ),
@@ -493,7 +499,7 @@ endgenerate
     )
     d_bbx_r3
     (
-        .clk    (clk            ),
+        .clk    (gated_clk            ),
         .reset  (rst            ),
         .en     (halt_RnnnnL    ),
         .in     (out_box_R10S   ),
@@ -525,7 +531,7 @@ endgenerate
     )
     d_bbx_f1
     (
-        .clk    (clk                ),
+        .clk    (gated_clk                ),
         .reset  (rst                ),
         .en     (halt_RnnnnL        ),
         .in     (tri_R13S_retime    ),
@@ -556,7 +562,7 @@ endgenerate
     )
     d_bbx_f3
     (
-        .clk    (clk            ),
+        .clk    (gated_clk            ),
         .reset  (rst            ),
         .en     (halt_RnnnnL    ),
         .in     (box_R13S_retime),
