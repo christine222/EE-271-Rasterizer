@@ -43,9 +43,6 @@ CCS_MAIN(int argv, char **argc){
 
     screenHls.width = screen.width;
     screenHls.height = screen.height;
-
-    configHls.ss_w = config.ss_w;
-    configHls.ss_w_lg2 = config.ss_w_lg2;
     
     switch(config.ss){
         case 1:

@@ -32,6 +32,8 @@ public:
             bbox.lower_left.y = triangle.v[0].y;
             bbox.upper_right.x = triangle.v[0].x;
             bbox.upper_right.y = triangle.v[0].y;
+
+
             // iterate over remaining vertices
             for (int vertex = 1; vertex < 3; vertex++)
             {
@@ -40,11 +42,15 @@ public:
                 bbox.lower_left.x = min(bbox.lower_left.x, triangle.v[vertex].x);
                 bbox.lower_left.y = min(bbox.lower_left.y, triangle.v[vertex].y);
             }
+
+            printf("bbox.lower_left.x: %x\n", (int)bbox.lower_left.x);
             // round down to subsample grid
             bbox.upper_right.x = floor_ss(bbox.upper_right.x, config);
             bbox.upper_right.y = floor_ss(bbox.upper_right.y, config);
             bbox.lower_left.x = floor_ss(bbox.lower_left.x, config);
             bbox.lower_left.y = floor_ss(bbox.lower_left.y, config);
+            printf("bbox.lower_left.x after floor: %x\n", (int)bbox.lower_left.x);
+            printf("bbox.lower_left.x after floor: %x\n", (int)config.subsample);
 
             // clip to screen
             bbox.upper_right.x = min(bbox.upper_right.x, screen.width);
@@ -89,27 +95,21 @@ private:
     SignedFixedPoint floor_ss(SignedFixedPoint val, ConfigHLS config)
     {
         // START CODE HERE
-        // set lower 8 bits to 0
-        ac_int<RADIX, false> mask = 0;
-        // val.set_slc(0, mask<8>(0));
         // set bits depending on subsample
         switch(config.subsample){
-          case 1:
-            mask.set_slc(7, (ac_int<3,false>)0xFF);
+          case 1: // MSAA 64: sample is 1/8 pixel
+            val.set_slc(0, (ac_int<7,false>)0);
             break;
-          case 2:
-            mask.set_slc(8, (ac_int<2,false>)0xFF);
+          case 2: // MSAA 16: sample is 1/4 a pixel
+            val.set_slc(0, (ac_int<8,false>)0);
             break;
-          case 4:
-            mask.set_slc(9, (ac_int<1,false>)0xFF);  
+          case 4: // MSAA 4: sample is 1/2 a pixel
+            val.set_slc(0, (ac_int<9,false>)0);
             break;
-          case 8:
-            // chop off everything
+          case 8: // MSAA 1: sample is 1 pixel
+            val.set_slc(0, (ac_int<10,false>)0);
             break;
         }
-
-        val = val & mask;
-        
         // END CODE HERE
         return val;
     }
