@@ -14,12 +14,6 @@
         printf("\tGold: %d\n", gold); \
         printf("\tError at sample: %d \n", i); \
         CCS_RETURN(-1); \
-    }\
-    else{ \
-        printf("\nSignal %s match!\n", signal); \
-        printf("\tHLS: %d\n", hls); \
-        printf("\tGold: %d\n", gold); \
-        printf("\tsample: %d \n", i); \
     }
 
 vector<Sample> hit_samples;

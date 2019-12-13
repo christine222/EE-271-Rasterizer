@@ -53,15 +53,9 @@ public:
                     
                     // jitter sample
                     SampleHLS jitter = jitterSample.run(sample, config);
-                    jitter.x = jitter.x << 2;
-                    jitter.y = jitter.y << 2;
-
-                    SampleHLS jittered_sample;
-                    jittered_sample.x = sample.x + jitter.x;
-                    jittered_sample.y = sample.y + jitter.y;
 
                     // test sample
-                    bool isHit = sampleTest.run(triangle, jittered_sample);
+                    bool isHit = sampleTest.run(triangle, jitter);
 
                     // if hit, write out the sample (including RGB values)
                     if (isHit){

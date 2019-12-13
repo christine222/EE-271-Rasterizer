@@ -1,5 +1,5 @@
 CLK_PERIOD ?= 2
-TEST ?= /afs/ir/class/ee271/project/vect/vec_271_04_sv_short.dat
+TEST ?= /afs/ir/class/ee271/project/vect/vec_271_02_sv_short.dat
 export CLOCK_PERIOD = $(CLK_PERIOD)
 export HLS_TEST_VECTOR = $(TEST)
 

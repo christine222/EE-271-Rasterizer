@@ -20,7 +20,7 @@ set RST  "rst"
 set DRIVER_CELL "INV_X1"
 set DR_CELL_OUT "ZN"
 
-set CLOCK_PERIOD 2
+set CLK_PERIOD $::env(CLOCK_PERIOD)
 
 #####################
 # Path Variables
@@ -106,38 +106,7 @@ link
 # Design Optimization Constraints
 ##################################
 
-# create clock
-create_clock [get_ports $CLK] -period $CLK_PERIOD
-
-# set output delay and load
-set_fanout_load 4 [get_ports "*" -filter {@port_direction == out} ]
-set_output_delay [ expr $CLK_PERIOD*3/4 ] -clock clk [all_outputs]
-#set_output_delay [ expr $CLK_PERIOD*3/4 ] -clock $CLK  [get_ports "*" -filter {@port_direction == out} ]
-#set_output_delay [ expr $CLK_PERIOD*1/2 ] -clock $CLK halt_RnnnnL
-
-set_wire_load_model -name 1K_hvratio_1_4
-set_wire_load_mode top
-
-set_max_fanout 4.0 [get_ports "*" -filter {@port_direction != out} ]
-
-
-# set input delay on all input ports except 'clk' and 'rst'
-set all_inputs_wo_rst_clk [remove_from_collection [remove_from_collection [all_inputs] [get_port $CLK]] [get_port $RST]]
-set_input_delay -clock $CLK [ expr $CLK_PERIOD*3/4 ] $all_inputs_wo_rst_clk
-set_driving_cell -lib_cell $DRIVER_CELL -pin $DR_CELL_OUT [ get_ports "*" -filter {@port_direction == in} ]
-
-# set no input delay on control ports
-#set_input_delay -clock $CLK 0 screen_RnnnnS
-#set_input_delay -clock $CLK 0 subSample_RnnnnU
-
-# set target die area
-#set_max_area $TARGET_AREA
-
-# set DC don't touch reset network
-remove_driving_cell $RST
-set_drive 0 $RST
-set_dont_touch_network $RST
-
+source ../build/Rasterizer.v1/rtl.v.dc.sdc
 
 ##########################################
 # Synthesize Design (Optimize for Timing)
