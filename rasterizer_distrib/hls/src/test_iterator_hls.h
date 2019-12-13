@@ -25,14 +25,14 @@ public:
             // Create increment value from config.subsample
             ac_int<24, false> increment = 0;
             switch(config.subsample){
-                case 1: // MSAA 64x
-                    increment.set_slc(0, (ac_int<5,false>)0x10);
+                case 1: // MSAA 64: sample is 1/8 pixel
+                    increment.set_slc(0, (ac_int<8,false>)0x100);
                     break;
-                case 2: // MSAA 16x
-                    increment.set_slc(0, (ac_int<7,false>)0x40);
+                case 2: // MSAA 16x: sample is 1/4 a pixel
+                    increment.set_slc(0, (ac_int<9,false>)0x200);
                     break;
-                case 4: // MSAA 4x
-                    increment.set_slc(0, (ac_int<9,false>)0x100);
+                case 4: // MSAA 4x: sample is 1/2 a pixel
+                    increment.set_slc(0, (ac_int<10,false>)0x200);
                     break;
                 case 8: // MSAA 1x
                     increment.set_slc(0, (ac_int<11,false>)0x400);
@@ -40,8 +40,10 @@ public:
             }
             // Iterate over box (using normal for loops)
             SampleHLS sample;
-            for (sample.x = bbox.lower_left.x; sample.x <= bbox.upper_right.x; sample.x + increment){
-                for (sample.y = bbox.lower_left.y; sample.y <= bbox.upper_right.y; sample.y + increment){
+            sample.x = bbox.lower_left.x;
+            sample.y = bbox.lower_left.y;
+            while(sample.x <= bbox.upper_right.x){
+                while(sample.y <= bbox.upper_right.y){
                     // jitter sample
                     SampleHLS jitter = jitterSample.run(sample, config);
 
@@ -49,7 +51,7 @@ public:
                     jittered_sample.x = sample.x + jitter.x;
                     jittered_sample.y = sample.y + jitter.y;
 
-                    // test sample
+                    // test sampleå
                     bool hit = sampleTest.run(triangle, jittered_sample);
 
                     // if hit, write out the sample (including RGB values)
