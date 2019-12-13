@@ -3,6 +3,7 @@
 
 #ifdef __cplusplus
 #include <vector>
+#include <stdio.h>
 #endif
 
 /* Utility Functions */
@@ -127,6 +128,7 @@ int rasterize_triangle(Triangle triangle, ZBuff *z, Screen screen, Config config
   //Calculate BBox
   BoundingBox bbox = get_bounding_box(triangle, screen, config);
 
+  //printf("config.ss_i: %f\n", (double)config.ss_i);
   //Iterate over samples and test if in triangle
   Sample sample;
   for (sample.x = bbox.lower_left.x; sample.x <= bbox.upper_right.x; sample.x += config.ss_i)

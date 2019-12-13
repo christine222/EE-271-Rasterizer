@@ -84,7 +84,6 @@ private:
     SignedFixedPoint floor_ss(SignedFixedPoint val, ConfigHLS config)
     {
         // START CODE HERE
-        // set lower 8 bits to 0
         ac_int<24, false> mask = 0xFFFFFF;
         //printf("before %x\n", val);
         // set bits depending on subsample
